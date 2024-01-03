@@ -20,10 +20,6 @@ const sumOfCalibrationValues = (calibrationDoc) => {
 };
 
 const decodeWordNumbers = (string) => {
-  //   const numbers = Object.keys(numberKey);
-  //   const digits = Object.values(numberKey);
-  //   let newString = string;
-
   function replacer(match) {
     const numberKey = {
       one: 1,
@@ -38,14 +34,11 @@ const decodeWordNumbers = (string) => {
     };
     return numberKey[match];
   }
+
   const regex =
     /(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)/g;
 
   const newString = string.replace(regex, replacer);
-
-  //   numbers.forEach((number, index) => {
-  //     newString = newString.replaceAll(number, digits[index]);
-  //   });
 
   return newString;
 };
