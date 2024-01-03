@@ -23,24 +23,24 @@ const sumOfCalibrationValues = (calibrationDoc) => {
 const decodeWordNumbers = (string) => {
   function replacer(match) {
     const numberKey = {
-      one: "1",
-      eno: "1",
-      two: "2",
-      owt: "2",
-      three: "3",
-      eerht: "3",
-      four: "4",
-      ruof: "4",
-      five: "5",
-      evif: "5",
-      six: "6",
-      xis: "6",
-      seven: "7",
-      neves: "7",
-      eight: "8",
-      thgie: "8",
-      nine: "9",
-      enin: "9",
+      one: "on1e",
+      eno: "on1e",
+      two: "tw2o",
+      owt: "tw2o",
+      three: "thr3ee",
+      eerht: "thr3ee",
+      four: "fo4ur",
+      ruof: "fo4ur",
+      five: "fi5ve",
+      evif: "fi5ve",
+      six: "si6x",
+      xis: "si6x",
+      seven: "sev7en",
+      neves: "sev7en",
+      eight: "eig8ht",
+      thgie: "eig8ht",
+      nine: "ni9ne",
+      enin: "ni9ne",
     };
     return numberKey[match];
   }
@@ -78,13 +78,3 @@ function answer() {
 }
 
 answer();
-
-console.log(
-  sumOfCalibrationValues(`two1nine
-    eightwothree
-    abcone2threexyz
-    xtwone3four
-    4nineeightseven2
-    zoneight234
-    7pqrstsixteen`)
-);
