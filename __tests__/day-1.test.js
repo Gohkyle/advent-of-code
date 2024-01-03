@@ -8,10 +8,14 @@ describe("joinFirstAndLast", () => {
   test("takes an array, returns a string", () => {
     expect(typeof joinFirstAndLast(["1", "5"])).toBe("string");
   });
-  test("takes an array, returns the sum of the first and last number in the array", () => {
+  test("takes an array, returns concatentation of first and last number in the array", () => {
     expect(joinFirstAndLast(["1", "5"])).toBe("15");
   });
+  test("takes an array of one length, double digit number", () => {
+    expect(joinFirstAndLast(["5"])).toBe("55");
+  });
 });
+
 describe("sumOfCalibrationValues", () => {
   test("takes a single line string a returns the sum of the first and last number", () => {
     const calibrationDoc = `1abc2`;
@@ -25,39 +29,116 @@ describe("sumOfCalibrationValues", () => {
     treb7uchet`;
     expect(sumOfCalibrationValues(calibrationDoc)).toBe(142);
   });
+  test("does not mutate original string", () => {
+    const calibrationDoc = `1abc2
+      pqr3stu8vwx
+      a1b2c3d4e5f
+      treb7uchet`;
+
+    const copyCalibrationDoc = `1abc2
+      pqr3stu8vwx
+      a1b2c3d4e5f
+      treb7uchet`;
+
+    sumOfCalibrationValues(calibrationDoc);
+    expect(copyCalibrationDoc).toBe(calibrationDoc);
+  });
 });
 
 describe("decodeWordNumbers()", () => {
-  test("converts single line string that contains word numbers into numbers", () => {
+  test("converts string that contains word numbers into digit integrated word", () => {
     const calibrationLine = `two1nine`;
 
-    expect(decodeWordNumbers(calibrationLine)).toBe("219");
-  });
-  test("converts multiple line string that contains word numbers into numbers", () => {
-    const calibrationDoc = `two1nine
-    abcone2threexyz`;
-
-    const decodedCalibrationDoc = `219
-    abc123xyz`;
-
-    expect(decodeWordNumbers(calibrationDoc)).toBe(decodedCalibrationDoc);
+    expect(decodeWordNumbers(calibrationLine)).toBe("tw2o1en9in");
   });
   test("changes words to digits from sequence, not by search term", () => {
-    const calibrationDoc = `two1nine
-    eightwothree
-    abcone2threexyz
-    xtwone3four
-    4nineeightseven2
-    zoneight234
-    7pqrstsixteen`;
+    const calibrationDoc = `two1nine`;
+    const cD2 = `eightwothree`;
+    const cD3 = `abcone2threexyz`;
+    const cD4 = `xtwone3four`;
+    const cD5 = `4nineeightseven2`;
+    const cD6 = `zoneight234`;
+    const cD7 = `7pqrstsixteen`;
 
-    const decodedCalibrationDoc = `219
-    8wo3
-    abc123xyz
-    x2ne34
-    49872
-    z1ight234
-    7pqrst6teen`;
+    const decodedCalibrationDoc = `tw2o1en9in`;
+    const dCD2 = `eig8htwoee3rht`;
+    const dCD3 = `abcon1e2ee3rhtxyz`;
+    const dCD4 = `xtw2one3ru4of`;
+    const dCD5 = `4ni9neeightne7ves2`;
+    const dCD6 = `zon1th8gie234`;
+    const dCD7 = `7pqrstsi6xteen`;
     expect(decodeWordNumbers(calibrationDoc)).toBe(decodedCalibrationDoc);
+    expect(decodeWordNumbers(cD2)).toBe(dCD2);
+    expect(decodeWordNumbers(cD3)).toBe(dCD3);
+    expect(decodeWordNumbers(cD4)).toBe(dCD4);
+    expect(decodeWordNumbers(cD5)).toBe(dCD5);
+    expect(decodeWordNumbers(cD6)).toBe(dCD6);
+    expect(decodeWordNumbers(cD7)).toBe(dCD7);
+  });
+  test("changes the words to digits of the last and first in the line, not in sequence", () => {
+    const data = `jjhxddmg5mqxqbgfivextlcpnvtwothreetwonerzk`;
+    const decoded = `jjhxddmg5mqxqbgfi5vextlcpnvtwothreetwe1norzk`;
+
+    const data2 = "eightrgzfdksevenftbvkt455oneightnl";
+    const decoded2 = "eig8htrgzfdksevenftbvkt455onth8gienl";
+    expect(decodeWordNumbers(data)).toBe(decoded);
+    expect(decodeWordNumbers(data2)).toBe(decoded2);
+  });
+  test("detects numbers with overlapping/shared characters", () => {
+    const data = "oneightsm";
+    const decoded = "on1th8giesm";
+    expect(decodeWordNumbers(data)).toBe(decoded);
+  });
+  test("returns a new string", () => {
+    const calibrationDoc = `7pqrstsixteen`;
+
+    expect(decodeWordNumbers(calibrationDoc)).not.toBe(calibrationDoc);
+  });
+  test("does not mutate original string", () => {
+    const calibrationDoc = `7pqrstsixteen`;
+
+    const copyCalibrationDoc = `7pqrstsixteen`;
+
+    decodeWordNumbers(calibrationDoc);
+    expect(copyCalibrationDoc).toBe(calibrationDoc);
+  });
+});
+describe("random data testing assertion", () => {
+  test("sumOfCalibrationValues", () => {
+    const decodedData = `36fgsjtm954sm5k
+    993stfpft29
+    1611nrhm2s
+    pzdq8
+    pltd9sjdkrscxr25
+    dzsldkmzd1
+    vlvpfmz247shcrvx3891
+    1rfvlnmfkdbmdjj
+    6bzzbftqggn8zggtbcd
+    hzxzjhkvd525dxfdlrd82
+    69nlgcdznskrsb
+    6rxkfhvsjxzbt45999
+    dsbmqpgmf896342
+    4knfzpthpf1
+    292vbmldd
+    5zgnnrx2222`;
+
+    expect(sumOfCalibrationValues(decodedData)).toBe(
+      35 +
+        99 +
+        12 +
+        88 +
+        95 +
+        11 +
+        21 +
+        11 +
+        68 +
+        52 +
+        69 +
+        69 +
+        82 +
+        41 +
+        22 +
+        52
+    );
   });
 });
