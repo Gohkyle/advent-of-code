@@ -49,14 +49,6 @@ module.exports = {
   decodeWordNumbers,
 };
 
-// fetch("https://adventofcode.com/2023/day/1/input")
-//   .then((response) => {
-//     return response.text();
-//   })
-//   .then((body) => {
-//     console.log(body);
-//   });
-
 fs.readFile("./puzzleInput.txt", "utf-8").then((response) => {
   console.log(sumOfCalibrationValues(response));
 });
