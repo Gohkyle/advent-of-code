@@ -1,6 +1,6 @@
 const fs = require("node:fs/promises");
 
-const gameStringToGameObj = (gamesArr) => {
+const gameStrToGameObj = (gamesArr) => {
   return gamesArr.map((gameStr) => {
     const splitGameStr = gameStr.split(":");
     const gameNo = splitGameStr[0].split(" ") || undefined;
@@ -13,7 +13,7 @@ const gameStringToGameObj = (gamesArr) => {
   });
 };
 
-const cubesStrToObj = (str) => {
+const roundStrToObj = (str) => {
   const redRegex = /\d+(?= red)/;
   const greenRegex = /\d+(?= green)/;
   const blueRegex = /\d+(?= blue)/;
@@ -29,59 +29,70 @@ const cubesStrToObj = (str) => {
   };
 };
 
-const checkGamePossible = (gameObj) => {
-  const redCubes = 12;
-  const greenCubes = 13;
-  const blueCubes = 14;
-
-  const possible =
-    gameObj.gameData.red <= redCubes &&
-    gameObj.gameData.green <= greenCubes &&
-    gameObj.gameData.blue <= blueCubes;
-
-  return { ...gameObj, possible };
+const convertsRoundData = (gameArr) => {
+  return gameArr.map((gameObj) => {
+    const gameData = gameObj.gameData.map((roundData) => {
+      return roundStrToObj(roundData);
+    });
+    return { ...gameObj, gameData };
+  });
 };
 
-const convertsRoundData = () => {};
+const checkGamePossible = (gameArr) => {
+  return gameArr.map((gameObj) => {
+    const redCubes = 12;
+    const greenCubes = 13;
+    const blueCubes = 14;
+
+    for (let i = 0; i < gameObj.gameData.length; i++) {
+      if (
+        gameObj.gameData[i].red > redCubes ||
+        gameObj.gameData[i].green > greenCubes ||
+        gameObj.gameData[i].blue > blueCubes
+      ) {
+        return { ...gameObj, possible: false };
+      }
+    }
+    return { ...gameObj, possible: true };
+  });
+};
 
 const sumPossibleGameNo = (gameData) => {
   let sum = 0;
   gameData.forEach((gameDatum) => {
-    gameDatum.possible ? (sum += +gameDatum.game) : null;
+    gameDatum.possible ? (sum += gameDatum.game) : null;
   });
   return sum;
 };
 
-fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
-  .then((gameTxt) => {
-    return gameTxt.split("\n");
-  })
-  .then((gamesArray) => {
-    console.log(gamesArray);
-    return gameStringToGameObj(gamesArray);
-  })
-  .then((arrOfGameObj) => {
-    console.log(arrOfGameObj);
-    return arrOfGameObj.map((gameObj) => {
-      const gameData = gameObj.gameData.map((roundData) => {
-        return cubesStrToObj(roundData);
-      });
-      return { ...gameObj, gameData };
+function answer() {
+  fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
+    .then((gameTxt) => {
+      return gameTxt.split("\n");
+    })
+    .then((gamesArray) => {
+      return gameStrToGameObj(gamesArray);
+    })
+    .then((gameObjArr) => {
+      return convertsRoundData(gameObjArr);
+    })
+    .then((gameArr) => {
+      return checkGamePossible(gameArr);
+    })
+    .then((gameArr) => {
+      return sumPossibleGameNo(gameArr);
+    })
+    .then((answer) => {
+      console.log(answer);
     });
-  });
-//   .then((arrOfGameObj) => {
-//     return arrOfGameObj.map((gameObj) => {
-//       return checkGamePossible(gameObj);
-//     });
-//   })
-//   .then((res) => {
-//     console.log(res);
-//   });
+}
 
 module.exports = {
-  gameStringToGameObj,
-  cubesStrToObj,
+  gameStrToGameObj,
+  roundStrToObj,
   convertsRoundData,
   checkGamePossible,
   sumPossibleGameNo,
 };
+
+answer();
