@@ -29,7 +29,16 @@ const cubesStrToObj = (str) => {
 };
 
 const checkGamePossible = (gameObj) => {
-  return { ...gameObj, possible: true };
+  const redCubes = 12;
+  const greenCubes = 13;
+  const blueCubes = 14;
+
+  const possible =
+    gameObj.gameData.red <= redCubes &&
+    gameObj.gameData.green <= greenCubes &&
+    gameObj.gameData.blue <= blueCubes;
+
+  return { ...gameObj, possible };
 };
 
 fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
