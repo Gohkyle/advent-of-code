@@ -1,6 +1,6 @@
 const {
-  gameStringToGameObj,
-  cubesStrToObj,
+  gameStrToGameObj,
+  roundStrToObj,
   checkGamePossible,
   sumPossibleGameNo,
   convertsRoundData,
@@ -12,8 +12,8 @@ describe("cubeConundrum", () => {
       const gameArr = [
         "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
       ];
-      expect(gameStringToGameObj(gameArr)[0]).toHaveProperty("game");
-      expect(gameStringToGameObj(gameArr)[0]).toHaveProperty("gameData");
+      expect(gameStrToGameObj(gameArr)[0]).toHaveProperty("game");
+      expect(gameStrToGameObj(gameArr)[0]).toHaveProperty("gameData");
     });
     test("takes each string and returns object with keys game and gameData", () => {
       const gameArr = [
@@ -23,11 +23,41 @@ describe("cubeConundrum", () => {
         "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
         "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
       ];
-
-      gameStringToGameObj(gameArr).forEach((gameStr) => {
-        expect(gameStr).toHaveProperty("game");
-        expect(gameStr).toHaveProperty("gameData");
-      });
+      const gameObjArr = [
+        {
+          game: 1,
+          gameData: [" 3 blue, 4 red", " 1 red, 2 green, 6 blue", " 2 green"],
+        },
+        {
+          game: 2,
+          gameData: [
+            " 1 blue, 2 green",
+            " 3 green, 4 blue, 1 red",
+            " 1 green, 1 blue",
+          ],
+        },
+        {
+          game: 3,
+          gameData: [
+            " 8 green, 6 blue, 20 red",
+            " 5 blue, 4 red, 13 green",
+            " 5 green, 1 red",
+          ],
+        },
+        {
+          game: 4,
+          gameData: [
+            " 1 green, 3 red, 6 blue",
+            " 3 green, 6 red",
+            " 3 green, 15 blue, 14 red",
+          ],
+        },
+        {
+          game: 5,
+          gameData: [" 6 red, 1 blue, 3 green", " 2 blue, 1 red, 2 green"],
+        },
+      ];
+      expect(gameStrToGameObj(gameArr)).toEqual(gameObjArr);
     });
     test("assigns the game number to the game key, as Number", () => {
       const gameArr = [
@@ -38,12 +68,12 @@ describe("cubeConundrum", () => {
         "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
       ];
 
-      gameStringToGameObj(gameArr).forEach(({ game }) => {
+      gameStrToGameObj(gameArr).forEach(({ game }) => {
         expect(typeof game).toBe("number");
       });
-      expect(gameStringToGameObj(gameArr)[0].game).toBe(1);
-      expect(gameStringToGameObj(gameArr)[1].game).toBe(2);
-      expect(gameStringToGameObj(gameArr)[2].game).toBe(3);
+      expect(gameStrToGameObj(gameArr)[0].game).toBe(1);
+      expect(gameStrToGameObj(gameArr)[1].game).toBe(2);
+      expect(gameStrToGameObj(gameArr)[2].game).toBe(3);
     });
     test("separates the gameData string into an array, and assigns it to gameData", () => {
       const gameArr = [
@@ -55,7 +85,7 @@ describe("cubeConundrum", () => {
         " 1 red, 2 green, 6 blue",
         " 2 green",
       ];
-      expect(gameStringToGameObj(gameArr)[0].gameData).toEqual(expGameData);
+      expect(gameStrToGameObj(gameArr)[0].gameData).toEqual(expGameData);
     });
     test("does not mutate original Array", () => {
       const gameArr = [
@@ -65,7 +95,7 @@ describe("cubeConundrum", () => {
         "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
       ];
 
-      gameStringToGameObj(gameArr);
+      gameStrToGameObj(gameArr);
 
       expect(gameArr).toEqual(copyGameArr);
     });
@@ -74,46 +104,45 @@ describe("cubeConundrum", () => {
         "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
       ];
 
-      expect(gameStringToGameObj(gameArr)).not.toBe(gameArr);
+      expect(gameStrToGameObj(gameArr)).not.toBe(gameArr);
     });
   });
-  describe("cubesStrToObj()", () => {
-    test("turns string into an object, with keys blue, red, green", () => {
-      expect(cubesStrToObj()).toHaveProperty("red");
-      expect(cubesStrToObj()).toHaveProperty("green");
-      expect(cubesStrToObj()).toHaveProperty("blue");
+  describe("roundStrToObj()", () => {
+    test("turns gameData item string into an object, with keys blue, red, green", () => {
+      expect(roundStrToObj()).toHaveProperty("red");
+      expect(roundStrToObj()).toHaveProperty("green");
+      expect(roundStrToObj()).toHaveProperty("blue");
     });
     test("returns 0 on key when nothing stated", () => {
-      expect(cubesStrToObj()).toEqual({ red: 0, green: 0, blue: 0 });
+      expect(roundStrToObj()).toEqual({ red: 0, green: 0, blue: 0 });
     });
     test("returns numbers", () => {
-      console.log(Object.values(cubesStrToObj(" 3 green, 15 blue, 14 red"))[0]);
       expect(
-        typeof Object.values(cubesStrToObj(" 3 green, 15 blue, 14 red"))[0]
+        typeof Object.values(roundStrToObj(" 3 green, 15 blue, 14 red"))[0]
       ).toBe("number");
       expect(
-        typeof Object.values(cubesStrToObj(" 3 green, 15 blue, 14 red"))[1]
+        typeof Object.values(roundStrToObj(" 3 green, 15 blue, 14 red"))[1]
       ).toBe("number");
       expect(
-        typeof Object.values(cubesStrToObj(" 3 green, 15 blue, 14 red"))[2]
+        typeof Object.values(roundStrToObj(" 3 green, 15 blue, 14 red"))[2]
       ).toBe("number");
     });
     test(" takes `number red/green/blue` and returns the number as the key to the property red/green/blue", () => {
-      expect(cubesStrToObj("1 blue")).toEqual({
+      expect(roundStrToObj("1 blue")).toEqual({
         red: 0,
         green: 0,
         blue: 1,
       });
     });
     test(" takes multidigit`number red/green/blue` and returns the number as the key to the property red/green/blue", () => {
-      expect(cubesStrToObj("11 blue")).toEqual({
+      expect(roundStrToObj("11 blue")).toEqual({
         red: 0,
         green: 0,
         blue: 11,
       });
     });
     test(" takes multi `number red/green/blue` and returns the number as the key to the property red/green/blue", () => {
-      expect(cubesStrToObj(" 3 blue, 4 red")).toEqual({
+      expect(roundStrToObj(" 3 blue, 4 red")).toEqual({
         red: 4,
         green: 0,
         blue: 3,
@@ -121,148 +150,282 @@ describe("cubeConundrum", () => {
     });
   });
   describe("convertsRoundData()", () => {
-    test("takes a gameObj returns gameData array of string to gameData array of objects", () => {
-      const gameDataArrOfStr = {
-        game: "4",
-        gameData: [
-          " 1 green, 3 red, 6 blue",
-          " 3 green, 6 red",
-          " 3 green, 15 blue, 14 red",
-        ],
-      };
-      const gameDataArrOfObj = {
-        game: "4",
-        gameData: [
-          { red: "3", green: "1", blue: "6" },
-          { red: "6", green: "3", blue: 0 },
-          { red: "14", green: "3", blue: "15" },
-        ],
-      };
+    test("takes gameArr converts gameData array of string to gameData array of objects", () => {
+      const gameDataArrOfStr = [
+        {
+          game: "4",
+          gameData: [
+            " 1 green, 3 red, 6 blue",
+            " 3 green, 6 red",
+            " 3 green, 15 blue, 14 red",
+          ],
+        },
+      ];
+      const gameDataArrOfObj = [
+        {
+          game: "4",
+          gameData: [
+            { red: 3, green: 1, blue: 6 },
+            { red: 6, green: 3, blue: 0 },
+            { red: 14, green: 3, blue: 15 },
+          ],
+        },
+      ];
       expect(convertsRoundData(gameDataArrOfStr)).toEqual(gameDataArrOfObj);
     });
-    test("returns a new array", () => {});
-    test("does not mutate original array", () => {});
+    test("returns a new array", () => {
+      const gameDataStr = [
+        {
+          game: "4",
+          gameData: [
+            " 1 green, 3 red, 6 blue",
+            " 3 green, 6 red",
+            " 3 green, 15 blue, 14 red",
+          ],
+        },
+      ];
+
+      expect(convertsRoundData(gameDataStr)).not.toBe(gameDataStr);
+    });
+    test("does not mutate original array", () => {
+      const gameDataArrOfStr = [
+        {
+          game: "4",
+          gameData: [
+            " 1 green, 3 red, 6 blue",
+            " 3 green, 6 red",
+            " 3 green, 15 blue, 14 red",
+          ],
+        },
+      ];
+      const copyGameDataArrOfStr = [
+        {
+          game: "4",
+          gameData: [
+            " 1 green, 3 red, 6 blue",
+            " 3 green, 6 red",
+            " 3 green, 15 blue, 14 red",
+          ],
+        },
+      ];
+      convertsRoundData(gameDataArrOfStr);
+      expect(gameDataArrOfStr).toEqual(copyGameDataArrOfStr);
+    });
   });
   describe("checkGamePossible()", () => {
-    test("takes gameObj and returns a new object with new key: possible", () => {
-      const gameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-      };
+    test("takes each gameObj and returns a new object with new key: possible", () => {
+      const gameArr = [
+        {
+          game: "1",
+          gameData: { red: "4", green: "2", blue: "3" },
+        },
+      ];
 
-      expect(checkGamePossible(gameObj)).toHaveProperty("possible");
+      expect(checkGamePossible(gameArr)[0]).toHaveProperty("possible");
     });
-    test("takes gameObj and returns a new object with new key: possible", () => {
-      const gameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-      };
-      const newGameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-        possible: true,
-      };
-      expect(checkGamePossible(gameObj)).toEqual(newGameObj);
+    test("takes each gameObj and returns a new object with new key: possible", () => {
+      const gameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+        },
+      ];
+      const newGameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+          possible: true,
+        },
+      ];
+      expect(checkGamePossible(gameArr)).toEqual(newGameArr);
     });
-    test("returns true on property possible if the red number is less than or equal redCubes variables ", () => {
-      const gameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-      };
-      const newGameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-        possible: true,
-      };
+    test("returns true on property possible if the red number is less than or equal redCubes variables", () => {
+      const gameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+        },
+      ];
+      const newGameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+          possible: true,
+        },
+      ];
 
-      const gameObj1 = {
-        game: "1",
-        gameData: { red: "14", green: "2", blue: "3" },
-      };
-      const newGameObj1 = {
-        game: "1",
-        gameData: { red: "14", green: "2", blue: "3" },
-        possible: false,
-      };
+      const gameArr1 = [
+        {
+          game: "1",
+          gameData: [{ red: "14", green: "2", blue: "3" }],
+        },
+      ];
+      const newGameArr1 = [
+        {
+          game: "1",
+          gameData: [{ red: "14", green: "2", blue: "3" }],
+          possible: false,
+        },
+      ];
 
-      expect(checkGamePossible(gameObj)).toEqual(newGameObj);
-      expect(checkGamePossible(gameObj1)).toEqual(newGameObj1);
+      expect(checkGamePossible(gameArr)).toEqual(newGameArr);
+      expect(checkGamePossible(gameArr1)).toEqual(newGameArr1);
     });
     test("returns true on property possible if any gameData is less than or equal redCubes variables ", () => {
-      const gameObj = {
-        game: "1",
-        gameData: { red: "4", green: "20", blue: "3" },
-      };
-      const newGameObj = {
-        game: "1",
-        gameData: { red: "4", green: "20", blue: "3" },
-        possible: false,
-      };
+      const gameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "20", blue: "3" }],
+        },
+      ];
+      const newGameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "20", blue: "3" }],
+          possible: false,
+        },
+      ];
 
-      const gameObj1 = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "30" },
-      };
-      const newGameObj1 = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "30" },
-        possible: false,
-      };
+      const gameArr1 = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "30" }],
+        },
+      ];
+      const newGameArr1 = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "30" }],
+          possible: false,
+        },
+      ];
 
-      expect(checkGamePossible(gameObj)).toEqual(newGameObj);
-      expect(checkGamePossible(gameObj1)).toEqual(newGameObj1);
+      expect(checkGamePossible(gameArr)).toEqual(newGameArr);
+      expect(checkGamePossible(gameArr1)).toEqual(newGameArr1);
     });
-    test("returns a new object", () => {
-      const gameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-      };
+    test("checkGamePossible over multiple rounds", () => {
+      const gameArr = [
+        {
+          game: 1,
+          gameData: [
+            { red: 4, green: 0, blue: 3 },
+            { red: 1, green: 2, blue: 6 },
+            { red: 0, green: 2, blue: 0 },
+          ],
+        },
+      ];
+      const newGameArr = [
+        {
+          game: 1,
+          gameData: [
+            { red: 4, green: 0, blue: 3 },
+            { red: 1, green: 2, blue: 6 },
+            { red: 0, green: 2, blue: 0 },
+          ],
+          possible: true,
+        },
+      ];
+      const gameArr1 = [
+        {
+          game: 1,
+          gameData: [
+            { red: 40, green: 0, blue: 3 },
+            { red: 1, green: 2, blue: 6 },
+            { red: 0, green: 22, blue: 50 },
+          ],
+        },
+      ];
+      const newGameArr1 = [
+        {
+          game: 1,
+          gameData: [
+            { red: 40, green: 0, blue: 3 },
+            { red: 1, green: 2, blue: 6 },
+            { red: 0, green: 22, blue: 50 },
+          ],
+          possible: false,
+        },
+      ];
+      expect(checkGamePossible(gameArr)).toEqual(newGameArr);
+      expect(checkGamePossible(gameArr1)).toEqual(newGameArr1);
+    });
 
-      expect(checkGamePossible(gameObj)).not.toEqual(gameObj);
+    test("returns a new object", () => {
+      const gameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+        },
+      ];
+
+      expect(checkGamePossible(gameArr)).not.toEqual(gameArr);
     });
     test("does not mutate original object", () => {
-      const gameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-      };
-      const copyGameObj = {
-        game: "1",
-        gameData: { red: "4", green: "2", blue: "3" },
-      };
+      const gameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+        },
+      ];
+      const copyGameArr = [
+        {
+          game: "1",
+          gameData: [{ red: "4", green: "2", blue: "3" }],
+        },
+      ];
 
-      checkGamePossible(gameObj);
-      expect(gameObj).toEqual(copyGameObj);
+      checkGamePossible(gameArr);
+      expect(gameArr).toEqual(copyGameArr);
     });
   });
   describe("sumPossibleGameNo()", () => {
     test("returns 0 for no data", () => {
-      expect(sumPossibleGameNo()).toBe(0);
+      expect(sumPossibleGameNo([])).toBe(0);
     });
     test("returns sum of game number with true values on possible property for no data", () => {
       const testData = [
         {
-          game: "1",
-          gameData: { red: "4", green: "2", blue: "3" },
+          game: 1,
+          gameData: [
+            { red: 4, green: 0, blue: 3 },
+            { red: 1, green: 2, blue: 6 },
+            { red: 0, green: 2, blue: 0 },
+          ],
           possible: true,
         },
         {
-          game: "2",
-          gameData: { red: "1", green: "2", blue: "1" },
+          game: 2,
+          gameData: [
+            { red: 0, green: 2, blue: 1 },
+            { red: 1, green: 3, blue: 4 },
+            { red: 0, green: 1, blue: 1 },
+          ],
           possible: true,
         },
         {
-          game: "3",
-          gameData: { red: "20", green: "8", blue: "6" },
+          game: 3,
+          gameData: [
+            { red: 20, green: 8, blue: 6 },
+            { red: 4, green: 13, blue: 5 },
+            { red: 1, green: 5, blue: 0 },
+          ],
           possible: false,
         },
         {
-          game: "4",
-          gameData: { red: "3", green: "1", blue: "6" },
-          possible: true,
+          game: 4,
+          gameData: [
+            { red: 3, green: 1, blue: 6 },
+            { red: 6, green: 3, blue: 0 },
+            { red: 14, green: 3, blue: 15 },
+          ],
+          possible: false,
         },
         {
-          game: "5",
-          gameData: { red: "6", green: "3", blue: "1" },
+          game: 5,
+          gameData: [
+            { red: 6, green: 3, blue: 1 },
+            { red: 1, green: 2, blue: 2 },
+          ],
           possible: true,
         },
       ];
