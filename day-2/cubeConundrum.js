@@ -65,8 +65,54 @@ const sumPossibleGameNo = (gameData) => {
   return sum;
 };
 
-function answer() {
-  fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
+const addMinimumPossible = (gameArr) => {
+  return gameArr.map((gameObj) => {
+    function searchColour(colour) {
+      let quantity = 0;
+      gameObj.gameData.forEach((round) => {
+        if (round[colour] > quantity) {
+          quantity = round[colour];
+        }
+      });
+      return quantity;
+    }
+    const red = searchColour("red");
+    const green = searchColour("green");
+    const blue = searchColour("blue");
+
+    const gameMin = {
+      red,
+      green,
+      blue,
+    };
+
+    return { ...gameObj, gameMin };
+  });
+};
+
+const addPower = (gameArr) => {
+  return gameArr.map((gameObj) => {
+    const { gameMin } = gameObj;
+
+    const power = gameMin.red * gameMin.blue * gameMin.green;
+    return { ...gameObj, power };
+  });
+};
+
+const sumPowers = (gameArr) => {
+  let sum = 0;
+  gameArr.forEach(({ power }) => {
+    return (sum += power);
+  });
+  return sum;
+};
+
+const testData = "./test-input.txt";
+const data = "./input.txt";
+
+function txtToData(path) {
+  return fs
+    .readFile(`${__dirname}/${path}`, "utf-8")
     .then((gameTxt) => {
       return gameTxt.split("\n");
     })
@@ -75,12 +121,31 @@ function answer() {
     })
     .then((gameObjArr) => {
       return convertsRoundData(gameObjArr);
-    })
+    });
+}
+
+function answerPart1(path) {
+  return txtToData(path)
     .then((gameArr) => {
       return checkGamePossible(gameArr);
     })
     .then((gameArr) => {
       return sumPossibleGameNo(gameArr);
+    })
+    .then((answer) => {
+      console.log(answer);
+    });
+}
+function answerPart2(path) {
+  return txtToData(path)
+    .then((gameArr) => {
+      return addMinimumPossible(gameArr);
+    })
+    .then((gameArr) => {
+      return addPower(gameArr);
+    })
+    .then((gameArr) => {
+      return sumPowers(gameArr);
     })
     .then((answer) => {
       console.log(answer);
@@ -93,6 +158,9 @@ module.exports = {
   convertsRoundData,
   checkGamePossible,
   sumPossibleGameNo,
+  addMinimumPossible,
+  addPower,
+  sumPowers,
 };
 
-answer();
+answerPart2(data);
