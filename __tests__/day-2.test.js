@@ -40,6 +40,9 @@ describe("cubeConundrum", () => {
       expect(cubesStrToObj()).toHaveProperty("green");
       expect(cubesStrToObj()).toHaveProperty("blue");
     });
+    test("returns 0 on key when nothing stated", () => {
+      expect(cubesStrToObj()).toEqual({ red: 0, green: 0, blue: 0 });
+    });
     test(" takes `number red/green/blue` and returns the number as the key to the property red/green/blue", () => {
       expect(cubesStrToObj("1 blue")).toEqual({
         red: 0,
