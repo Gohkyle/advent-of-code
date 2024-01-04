@@ -1,5 +1,6 @@
+const data = require("./data/test-input.json");
 
-const 
+console.log(data.length);
 
 //scan all numbers, create total
 
