@@ -28,6 +28,10 @@ const cubesStrToObj = (str) => {
   };
 };
 
+const checkGamePossible = (gameObj) => {
+  return { ...gameObj, possible: true };
+};
+
 fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
   .then((gameTxt) => {
     return gameTxt.split("\n");
@@ -37,8 +41,11 @@ fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
   })
   .then((arrOfGameObj) => {
     return arrOfGameObj.map((gameObj) => {
-      console.log(gameObj);
+      return { ...gameObj, gameData: cubesStrToObj(gameObj.gameData) };
     });
+  })
+  .then((res) => {
+    // console.log(res);
   });
 
-module.exports = { gameStringToGameObj, cubesStrToObj };
+module.exports = { gameStringToGameObj, cubesStrToObj, checkGamePossible };
