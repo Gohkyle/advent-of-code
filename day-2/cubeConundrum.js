@@ -41,6 +41,8 @@ const checkGamePossible = (gameObj) => {
   return { ...gameObj, possible };
 };
 
+const sumPossibleGameNo = () => {};
+
 fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
   .then((gameTxt) => {
     return gameTxt.split("\n");
@@ -53,8 +55,16 @@ fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
       return { ...gameObj, gameData: cubesStrToObj(gameObj.gameData) };
     });
   })
-  .then((res) => {
-    // console.log(res);
-  });
+  .then((arrOfGameObj) => {
+    return arrOfGameObj.map((gameObj) => {
+      return checkGamePossible(gameObj);
+    });
+  })
+  .then((res) => {});
 
-module.exports = { gameStringToGameObj, cubesStrToObj, checkGamePossible };
+module.exports = {
+  gameStringToGameObj,
+  cubesStrToObj,
+  checkGamePossible,
+  sumPossibleGameNo,
+};
