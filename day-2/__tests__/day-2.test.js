@@ -7,7 +7,7 @@ const {
   addMinimumPossible,
   addPower,
   sumPowers,
-} = require("../day-2/cubeConundrum");
+} = require("../cubeConundrum");
 
 describe("cubeConundrum", () => {
   describe("part-1", () => {

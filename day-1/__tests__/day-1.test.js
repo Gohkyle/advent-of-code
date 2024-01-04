@@ -2,7 +2,7 @@ const {
   sumOfCalibrationValues,
   joinFirstAndLast,
   decodeWordNumbers,
-} = require("../day-1/trebuchet");
+} = require("../trebuchet");
 
 describe("joinFirstAndLast", () => {
   test("takes an array, returns a string", () => {
