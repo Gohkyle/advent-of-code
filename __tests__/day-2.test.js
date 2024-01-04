@@ -1,4 +1,7 @@
-const { gameStringToGameObj } = require("../day-2/cubeConundrum");
+const {
+  gameStringToGameObj,
+  cubesStrToObj,
+} = require("../day-2/cubeConundrum");
 
 describe("cubeConundrum", () => {
   describe("gameStrToGameObj()", () => {
@@ -31,5 +34,25 @@ describe("cubeConundrum", () => {
       expect(gameStr).toBe(copyGameStr);
     });
   });
-  describe("cubesStrToObj()", () => {});
+  describe("cubesStrToObj()", () => {
+    test("turns string into an object, with keys blue, red, green", () => {
+      expect(cubesStrToObj()).toHaveProperty("red");
+      expect(cubesStrToObj()).toHaveProperty("green");
+      expect(cubesStrToObj()).toHaveProperty("blue");
+    });
+    test(" takes `number red/green/blue` and returns the number as the key to the property red/green/blue", () => {
+      expect(cubesStrToObj("1 blue")).toEqual({
+        red: 0,
+        green: 0,
+        blue: "1",
+      });
+    });
+    test(" takes multi `number red/green/blue` and returns the number as the key to the property red/green/blue", () => {
+      expect(cubesStrToObj(" 3 blue, 4 red")).toEqual({
+        red: "4",
+        green: 0,
+        blue: "3",
+      });
+    });
+  });
 });

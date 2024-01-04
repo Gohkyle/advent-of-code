@@ -12,6 +12,22 @@ const gameStringToGameObj = (str) => {
   };
 };
 
+const cubesStrToObj = (str) => {
+  const redRegex = /\d(?= red)/;
+  const greenRegex = /\d(?= green)/;
+  const blueRegex = /\d(?= blue)/;
+
+  const red = redRegex.exec(str);
+  const green = greenRegex.exec(str);
+  const blue = blueRegex.exec(str);
+
+  return {
+    red: red === null ? 0 : red[0],
+    green: green === null ? 0 : green[0],
+    blue: blue === null ? 0 : blue[0],
+  };
+};
+
 fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
   .then((gameTxt) => {
     return gameTxt.split("\n");
@@ -19,6 +35,10 @@ fs.readFile(`${__dirname}/test-input.txt`, "utf-8")
   .then((gamesArray) => {
     return gamesArray.map((game) => gameStringToGameObj(game));
   })
-  .then((res) => {});
+  .then((arrOfGameObj) => {
+    return arrOfGameObj.map((gameObj) => {
+      console.log(gameObj);
+    });
+  });
 
-module.exports = { gameStringToGameObj };
+module.exports = { gameStringToGameObj, cubesStrToObj };
