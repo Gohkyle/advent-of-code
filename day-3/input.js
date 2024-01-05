@@ -13,4 +13,4 @@ function convertTxtToJSON(fileName) {
     });
 }
 
-convertTxtToJSON("test-regex-input");
+convertTxtToJSON("input");
