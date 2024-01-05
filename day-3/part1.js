@@ -50,7 +50,14 @@ const getTotal = (arr) => {
     return accumulator + rowSum;
   }, 0);
 };
-module.exports = { findNonParts, checkNonParts, getTotal };
+
+const getNonPartsTotal = (arr) => {
+  const nonParts = checkNonParts(arr).flat();
+
+  return nonParts.reduce((acc, nonPart) => acc + +nonPart, 0);
+};
+
+module.exports = { findNonParts, checkNonParts, getTotal, getNonPartsTotal };
 
 //scan row, for a number,
 //check length of number, and position
