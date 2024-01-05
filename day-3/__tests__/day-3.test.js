@@ -1,7 +1,7 @@
 const data = require("../data/test-input.json");
 const testRegexData = require("../data/test-regex-input.json");
 
-const { findNonParts, checkNonParts } = require("../part1");
+const { findNonParts, checkNonParts, getTotal } = require("../part1");
 
 describe("gearRatios", () => {
   describe("findNonParts()", () => {
@@ -176,5 +176,9 @@ describe("gearRatios", () => {
       });
     });
   });
-  describe("");
+  describe("getTotal()", () => {
+    test("returns a total of all the numbers in the string", () => {
+      expect(getTotal(data)).toBe(4533);
+    });
+  });
 });

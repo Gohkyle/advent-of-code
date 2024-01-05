@@ -37,7 +37,20 @@ const checkNonParts = (arr) => {
   });
 };
 
-module.exports = { findNonParts, checkNonParts };
+const getTotal = (arr) => {
+  let total = 0;
+  const numbers = /\d+/g;
+
+  arr.forEach((row) => {
+    let array;
+
+    while ((array = numbers.exec(row)) !== null) {
+      total += +array[0];
+    }
+  });
+  return total;
+};
+module.exports = { findNonParts, checkNonParts, getTotal };
 
 //scan row, for a number,
 //check length of number, and position
