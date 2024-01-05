@@ -44,7 +44,6 @@ const getTotal = (arr) => {
     let array;
     let rowSum = 0;
     while ((array = numbers.exec(row)) !== null) {
-      console.log(array[0]);
       rowSum += +array[0];
     }
     return accumulator + rowSum;
