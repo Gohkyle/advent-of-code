@@ -1,7 +1,19 @@
-const data = require("./data/test-input.json");
+const findParts = (arr) => {
+  const numbers = /\d+/g;
+  return arr.map((row) => {
+    let array;
 
-console.log(data.length);
+    const results = [];
+    while ((array = numbers.exec(row)) !== null) {
+      results.push(array);
+    }
+    return results;
+  });
+};
 
+const checkParts = () => {};
+
+module.exports = { findParts };
 //scan all numbers, create total
 
 //scan row, for a number,
