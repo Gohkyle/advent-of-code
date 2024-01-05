@@ -1,33 +1,36 @@
 const data = require("../data/test-input.json");
+const testRegexData = require("../data/test-regex-input.json");
 
-const { findParts } = require("../part1");
+const { findNonParts, checkNonParts } = require("../part1");
 
 describe("gearRatios", () => {
-  describe("findParts()", () => {
+  describe("findNonParts()", () => {
     test("searches string for a number, returns results array", () => {
       const testData = ["467......."];
       const results = [[["467"]]];
-      expect(findParts(testData)[0][0][0]).toBe(results[0][0][0]);
-      expect(JSON.stringify(findParts(testData))).toBe(JSON.stringify(results));
+      expect(findNonParts(testData)[0][0][0]).toBe(results[0][0][0]);
+      expect(JSON.stringify(findNonParts(testData))).toBe(
+        JSON.stringify(results)
+      );
     });
     test("able to search for multiple numbers in a string", () => {
       const testData = ["467..114.."];
       const results = [[["467"], ["114"]]];
-      expect(findParts(testData)[0][0][0]).toBe("467");
-      expect(findParts(testData)[0][1][0]).toBe("114");
-      expect(JSON.stringify(findParts(testData))).toEqual(
+      expect(findNonParts(testData)[0][0][0]).toBe("467");
+      expect(findNonParts(testData)[0][1][0]).toBe("114");
+      expect(JSON.stringify(findNonParts(testData))).toEqual(
         JSON.stringify(results)
       );
     });
     test("returns an empty array for no results", () => {
       const testData = ["...*......"];
       const results = [[]];
-      expect(findParts(testData)).toEqual(results);
+      expect(findNonParts(testData)).toEqual(results);
     });
     test("able to search multiple string in an array", () => {
       const testData = ["467..114..", "...*......", "..35..633."];
       const results = [[["467"], ["114"]], [], [["35"], ["633"]]];
-      expect(JSON.stringify(findParts(testData))).toEqual(
+      expect(JSON.stringify(findNonParts(testData))).toEqual(
         JSON.stringify(results)
       );
     });
@@ -35,7 +38,7 @@ describe("gearRatios", () => {
       const testData = ["467..114..", "...*......", "..35..633."];
       const testResults = [[["467"], ["114"]], [], [["35"], ["633"]]];
 
-      findParts(testData).forEach((row) => {
+      findNonParts(testData).forEach((row) => {
         row.forEach((result) => {
           console.log(result);
           if (result) {
@@ -44,7 +47,7 @@ describe("gearRatios", () => {
           }
         });
       });
-      expect(JSON.stringify(findParts(testData))).toEqual(
+      expect(JSON.stringify(findNonParts(testData))).toEqual(
         JSON.stringify(testResults)
       );
     });
@@ -52,9 +55,126 @@ describe("gearRatios", () => {
       const testData = ["467..114*.", "...*......", ".+35..633."];
       const testResults = [[["467"]], [], [["633"]]];
 
-      expect(JSON.stringify(findParts(testData))).toBe(
+      const testRegexResults = [
+        [["114"]],
+        [],
+        [["35"], ["633"]],
+        [],
+        [["11"]],
+        [["58"]],
+        [["592"]],
+        [["755"]],
+        [],
+        [["664"], ["598"], ["1"]],
+      ];
+      expect(JSON.stringify(findNonParts(testData))).toBe(
         JSON.stringify(testResults)
+      );
+      expect(JSON.stringify(findNonParts(testRegexData))).toBe(
+        JSON.stringify(testRegexResults)
       );
     });
   });
+  describe("checkNonParts()", () => {
+    describe("returns a new array of filtered results", () => {
+      describe("by checking next row for adjacent symbols", () => {
+        test("one digit directly below", () => {
+          const testData = [".1.", ".*."];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+        });
+        test("digits diagonally below", () => {
+          const testData = [".1.", "*.."];
+          const testData1 = [".1.", "..*"];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+          expect(checkNonParts(testData1)).toEqual(testResults);
+        });
+        test("diagonal search works at the beginning of string", () => {
+          const testData = ["1..", "*.."];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+        });
+        test("diagonal search works at the end of string", () => {
+          const testData = ["..1", "..*"];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+        });
+        test("works for multidigit numbers", () => {
+          const testData = [".21", "..*"];
+          const testResults = [[], []];
+
+          const testData1 = [".21..", "..*.."];
+          const testResults1 = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+          expect(checkNonParts(testData1)).toEqual(testResults1);
+        });
+        test("doesn't break on the last row", () => {
+          const testData1 = [".....", ".21.."];
+          const testResults1 = [[], [["21"]]];
+
+          expect(JSON.stringify(checkNonParts(testData1))).toEqual(
+            JSON.stringify(testResults1)
+          );
+        });
+      });
+      describe("by checking previous row for adjacent symbols", () => {
+        test("one digit directly above", () => {
+          const testData = [".*.", ".1."];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+        });
+        test("digits diagonally above", () => {
+          const testData = ["*..", ".1."];
+          const testData1 = ["..*", ".1."];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+          expect(checkNonParts(testData1)).toEqual(testResults);
+        });
+        test("diagonal search doesn't break for the beginning of string", () => {
+          const testData = ["*..", "1.."];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+        });
+        test("diagonal search doesn't break at the end of string", () => {
+          const testData = ["..*", "..1"];
+          const testResults = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+        });
+        test("works for multidigit numbers", () => {
+          const testData = ["..*", ".32"];
+          const testResults = [[], []];
+
+          const testData1 = ["..*..", ".22.."];
+          const testResults1 = [[], []];
+
+          expect(checkNonParts(testData)).toEqual(testResults);
+          expect(checkNonParts(testData1)).toEqual(testResults1);
+        });
+        test("doesn't break on the first row", () => {
+          const testData = [".21.."];
+          const testResults = [[["21"]]];
+          expect(JSON.stringify(checkNonParts(testData))).toEqual(
+            JSON.stringify(testResults)
+          );
+        });
+      });
+      test("testData assertion", () => {
+        const results = [[["114"]], [], [], [], [], [["58"]], [], [], [], []];
+        expect(JSON.stringify(checkNonParts(data))).toBe(
+          JSON.stringify(results)
+        );
+      });
+    });
+  });
+  describe("");
 });
