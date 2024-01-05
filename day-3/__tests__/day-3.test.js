@@ -48,7 +48,7 @@ describe("gearRatios", () => {
         JSON.stringify(testResults)
       );
     });
-    test("only searches for digits with symbols next to it", () => {
+    test("only searches for digits without symbols next to it", () => {
       const testData = ["467..114*.", "...*......", ".+35..633."];
       const testResults = [[["467"]], [], [["633"]]];
 

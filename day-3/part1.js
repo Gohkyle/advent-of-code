@@ -1,5 +1,5 @@
 const findParts = (arr) => {
-  const numbers = /\d+/g;
+  const numbers = /(?<=\.)\d+(?=\.)|^\d+(?=\.)|(?<=\.)\d+$/g;
   return arr.map((row) => {
     let array;
 
