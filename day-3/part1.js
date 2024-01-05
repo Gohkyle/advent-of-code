@@ -38,17 +38,17 @@ const checkNonParts = (arr) => {
 };
 
 const getTotal = (arr) => {
-  let total = 0;
   const numbers = /\d+/g;
 
-  arr.forEach((row) => {
+  return arr.reduce((accumulator, row) => {
     let array;
-
+    let rowSum = 0;
     while ((array = numbers.exec(row)) !== null) {
-      total += +array[0];
+      console.log(array[0]);
+      rowSum += +array[0];
     }
-  });
-  return total;
+    return accumulator + rowSum;
+  }, 0);
 };
 module.exports = { findNonParts, checkNonParts, getTotal };
 

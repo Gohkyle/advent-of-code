@@ -177,7 +177,7 @@ describe("gearRatios", () => {
     });
   });
   describe("getTotal()", () => {
-    test("returns a total of all the numbers in the string", () => {
+    test.only("returns a total of all the numbers in the string", () => {
       expect(getTotal(data)).toBe(4533);
     });
   });
