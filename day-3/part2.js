@@ -1,12 +1,112 @@
-const findStars = () => {};
-// /*/g.exec()
+const findStars = (arr) => {
+  const star = /\*/g;
+  return arr.map((row) => {
+    let array;
 
-const findGears = () => {};
-//check stars results array for adjacent numbers
+    const results = [];
+    while ((array = star.exec(row)) !== null) {
+      results.push(array);
+    }
+    return results;
+  });
+};
+
+const findNumbers = (arr) => {
+  const isNumbers = /\d+/g;
+  return arr.map((row) => {
+    let array;
+
+    const results = [];
+    while ((array = isNumbers.exec(row)) !== null) {
+      results.push(array);
+    }
+    return results;
+  });
+};
+
+const findGearParts = (arr) => {
+  const numbers = findNumbers(arr);
+
+  return numbers.map((row, rowNum) => {
+    return row.filter((result) => {
+      const isStar = /\*/;
+
+      const nextRow = rowNum + 1;
+      const prevRow = rowNum - 1;
+
+      const startSearch = result.index - 1 < 0 ? 0 : result.index - 1;
+      const endSearch = startSearch + result[0].length + 2;
+
+      const below = arr[nextRow]
+        ? arr[nextRow].slice(startSearch, endSearch)
+        : "";
+
+      const above = arr[prevRow]
+        ? arr[prevRow].slice(startSearch, endSearch)
+        : "";
+
+      const inLine = arr[rowNum].slice(startSearch, endSearch);
+
+      return isStar.test(below) || isStar.test(above) || isStar.test(inLine);
+    });
+  });
+};
+
+//list of potential gear parts, => list of star co ordinates, with numbers
+//gear potential parts with two numbers
+
+const createGearProfiles = (arr) => {
+  const gearParts = findGearParts(arr);
+
+  let gearObj = [];
+
+  gearParts.forEach((row, rowNum) => {
+    return row.forEach((result) => {
+      const isStar = /\*/g;
+
+      const nextRow = rowNum + 1;
+      const prevRow = rowNum - 1;
+
+      const startSearch = result.index - 1 < 0 ? 0 : result.index - 1;
+      const endSearch = startSearch + result[0].length + 2;
+
+      const below = arr[nextRow]
+        ? arr[nextRow].slice(startSearch, endSearch)
+        : "";
+
+      const above = arr[prevRow]
+        ? arr[prevRow].slice(startSearch, endSearch)
+        : "";
+
+      const inLine = arr[rowNum].slice(startSearch, endSearch);
+
+      let array;
+      while ((array = isStar.exec(below)) !== null) {
+        const id = `${rowNum + 1},${startSearch + array.index}`;
+        gearObj = [...gearObj, { id, partNo: result[0] }];
+      }
+
+      let array2;
+      while ((array2 = isStar.exec(above)) !== null) {
+        console.log(array2);
+        const id = `${rowNum - 1},${array2.index + startSearch}`;
+        gearObj = [...gearObj, { id, partNo: result[0] }];
+      }
+      let array3;
+      while ((array2 = isStar.exec(inLine)) !== null) {
+        console.log(array2);
+        const id = `${rowNum},${array2.index + startSearch}`;
+        gearObj = [...gearObj, { id, partNo: result[0] }];
+      }
+    });
+  });
+  console.log(gearObj);
+  return gearObj;
+};
 
 const calcGearRatios = () => {};
 //converts gears into gear ratios
 
 const sumGearRatios = () => {};
 
-module.exports = { findStars };
+module.exports = { findStars, findNumbers, findGearParts, createGearProfiles };
