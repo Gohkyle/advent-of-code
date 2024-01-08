@@ -82,23 +82,21 @@ const findGearParts = (arr) => {
       let array;
       while ((array = isStar.exec(below)) !== null) {
         const id = `${rowNum + 1},${startSearch + array.index}`;
-        updateGearObj(gearObj, { id, partNumber: result[0] });
+        gearObj = updateGearObj(gearObj, { id, partNumber: result[0] });
       }
 
       let array2;
       while ((array2 = isStar.exec(above)) !== null) {
-        console.log(array2);
         const id = `${rowNum - 1},${array2.index + startSearch}`;
 
-        updateGearObj(gearObj, { id, partNumber: result[0] });
+        gearObj = updateGearObj(gearObj, { id, partNumber: result[0] });
       }
 
       let array3;
       while ((array3 = isStar.exec(inLine)) !== null) {
-        console.log(array2);
         const id = `${rowNum},${array3.index + startSearch}`;
 
-        updateGearObj(gearObj, { id, partNumber: result[0] });
+        gearObj = updateGearObj(gearObj, { id, partNumber: result[0] });
       }
     });
   });

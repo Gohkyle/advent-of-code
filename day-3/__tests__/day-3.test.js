@@ -54,7 +54,6 @@ describe("gearRatios", () => {
 
         findNonParts(testData).forEach((row) => {
           row.forEach((result) => {
-            console.log(result);
             if (result) {
               expect(result).toHaveProperty("index");
               expect(result).toHaveProperty("input");
