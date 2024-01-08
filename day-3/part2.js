@@ -123,9 +123,24 @@ const updateGearObj = (arr, newEntry) => {
   }
   return copyArr;
 };
-const calcGearRatios = () => {};
-//converts gears into gear ratios
 
-const sumGearRatios = () => {};
+const findGears = (gearObjs) => {
+  return gearObjs.filter((gearObj) => {
+    return gearObj.parts.length === 2;
+  });
+};
 
-module.exports = { findStars, findNumbers, findGearParts, updateGearObj };
+const sumGearRatios = (gearRatios) => {
+  return gearRatios.reduce((acc, gear) => {
+    return (acc += gear.parts[0] * gear.parts[1]);
+  }, 0);
+};
+
+module.exports = {
+  findStars,
+  findNumbers,
+  findGearParts,
+  updateGearObj,
+  findGears,
+  sumGearRatios,
+};

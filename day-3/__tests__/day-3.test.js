@@ -14,6 +14,8 @@ const {
   findGearParts,
   createGearProfiles,
   updateGearObj,
+  findGears,
+  sumGearRatios,
 } = require("../part2");
 
 describe("gearRatios", () => {
@@ -245,6 +247,7 @@ describe("gearRatios", () => {
             const testResult1 = [{ id: "1,2", parts: ["1"] }];
 
             expect(findGearParts(testData1)).toEqual(testResult1);
+            expect(findGearParts(testData)).toEqual(testResult);
           });
           test("diagonal search works at the beginning of string", () => {
             const testData = ["1..", "*.."];
@@ -391,6 +394,64 @@ describe("gearRatios", () => {
             expect(arr).toEqual(copyArr);
           });
         });
+      });
+    });
+    describe("findGears()", () => {
+      test("takes gearObj array, and removes any with parts of not length 2", () => {
+        const testData = [
+          { id: "9,2", parts: ["1", "2", "3"] },
+          { id: "1,4", parts: ["1"] },
+          { id: "3,0", parts: ["1", "2"] },
+        ];
+        const testResult = [{ id: "3,0", parts: ["1", "2"] }];
+        expect(findGears(testData)).toEqual(testResult);
+      });
+      test("returns a new array", () => {
+        const testData = [
+          { id: "9,2", parts: ["1", "2", "3"] },
+          { id: "1,4", parts: ["1"] },
+          { id: "3,0", parts: ["1", "2"] },
+        ];
+
+        expect(findGears(testData)).not.toEqual(testData);
+      });
+      test("returns a new array", () => {
+        const testData = [
+          { id: "9,2", parts: ["1", "2", "3"] },
+          { id: "1,4", parts: ["1"] },
+          { id: "3,0", parts: ["1", "2"] },
+        ];
+        const copyTestData = [
+          { id: "9,2", parts: ["1", "2", "3"] },
+          { id: "1,4", parts: ["1"] },
+          { id: "3,0", parts: ["1", "2"] },
+        ];
+
+        findGears(testData);
+        expect(testData).toEqual(copyTestData);
+      });
+    });
+    describe("sumGearRatios()", () => {
+      test("returns the product of the numbers on the parts key", () => {
+        const testData = [{ id: "3,0", parts: ["1", "2"] }];
+
+        const testData1 = [
+          { id: "3,0", parts: ["1", "2"] },
+          { id: "2,0", parts: ["12", "2"] },
+          { id: "8,0", parts: ["1", "2"] },
+          { id: "6,0", parts: ["1", "1"] },
+          { id: "9,0", parts: ["1", "29"] },
+          { id: "10,0", parts: ["111", "2"] },
+        ];
+
+        expect(sumGearRatios(testData)).toBe(2);
+        expect(sumGearRatios(testData1)).toBe(2 + 24 + 2 + 1 + 29 + 222);
+      });
+      test("test input assertion", () => {
+        const parts = findGearParts(data);
+        const gears = findGears(parts);
+        const gearRatio = sumGearRatios(gears);
+        expect(gearRatio).toBe(467835);
       });
     });
   });
