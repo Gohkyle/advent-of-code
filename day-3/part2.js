@@ -93,7 +93,6 @@ const sumGearRatios = (gearRatios) => {
 };
 
 module.exports = {
-  findStars,
   findNumbers,
   findGearParts,
   updateGearObj,

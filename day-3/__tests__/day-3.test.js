@@ -9,10 +9,8 @@ const {
 } = require("../part1");
 
 const {
-  findStars,
   findNumbers,
   findGearParts,
-  createGearProfiles,
   updateGearObj,
   findGears,
   sumGearRatios,
