@@ -203,15 +203,7 @@ describe("gearRatios", () => {
     });
   });
   describe("part2", () => {
-    describe("findStars()", () => {
-      test("returns results array for any stars", () => {
-        const results = [[], [["*"]], [], [], [["*"]], [], [], [], [["*"]], []];
-        expect(JSON.stringify(findStars(data))).toEqual(
-          JSON.stringify(results)
-        );
-      });
-    });
-    describe("findParts()", () => {
+    describe("findNumbers()", () => {
       test("returns results array for any numbers", () => {
         const results = [
           [["467"], ["114"]],

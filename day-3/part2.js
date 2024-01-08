@@ -1,16 +1,3 @@
-const findStars = (arr) => {
-  const star = /\*/g;
-  return arr.map((row) => {
-    let array;
-
-    const results = [];
-    while ((array = star.exec(row)) !== null) {
-      results.push(array);
-    }
-    return results;
-  });
-};
-
 const findNumbers = (arr) => {
   const isNumbers = /\d+/g;
   return arr.map((row) => {
@@ -23,37 +10,6 @@ const findNumbers = (arr) => {
     return results;
   });
 };
-
-// const findGearParts = (arr) => {
-//   const numbers = findNumbers(arr);
-
-//   return numbers.map((row, rowNum) => {
-//     return row.filter((result) => {
-//       const isStar = /\*/;
-
-//       const nextRow = rowNum + 1;
-//       const prevRow = rowNum - 1;
-
-//       const startSearch = result.index - 1 < 0 ? 0 : result.index - 1;
-//       const endSearch = startSearch + result[0].length + 2;
-
-//       const below = arr[nextRow]
-//         ? arr[nextRow].slice(startSearch, endSearch)
-//         : "";
-
-//       const above = arr[prevRow]
-//         ? arr[prevRow].slice(startSearch, endSearch)
-//         : "";
-
-//       const inLine = arr[rowNum].slice(startSearch, endSearch);
-
-//       return isStar.test(below) || isStar.test(above) || isStar.test(inLine);
-//     });
-//   });
-// };
-
-// //list of potential gear parts, => list of star co ordinates, with numbers
-//gear potential parts with two numbers
 
 const findGearParts = (arr) => {
   let gearObj = [];
