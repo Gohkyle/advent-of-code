@@ -9,8 +9,10 @@ const getMap = (txt, mapType) => {
 
   return txt.match(map).map((line) => line.split(" "));
 };
-const getMapTypeRegex = () => {
-  //extracts names from pre map:
+
+const getMapTypes = (txt) => {
+  const mapTypeRegex = /(?<=\n)[\w-]*(?= map:)/g;
+  return txt.match(mapTypeRegex);
 };
 
 const txtToJSON = (fileName) => {
@@ -25,4 +27,4 @@ const txtToJSON = (fileName) => {
     ];
   });
 };
-module.exports = { getMapRegex, getMap };
+module.exports = { getMapRegex, getMap, getMapTypes };

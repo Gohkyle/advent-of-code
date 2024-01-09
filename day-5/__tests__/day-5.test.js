@@ -1,4 +1,4 @@
-const { getMapRegex, getMap } = require("../data/txtToJSON");
+const { getMapRegex, getMap, getMapTypes } = require("../data/txtToJSON");
 
 describe("getMapRegex()", () => {
   test("takes a string, returns regex expression with embedded string ", () => {
@@ -27,5 +27,11 @@ describe("getMap", () => {
 
     expect(getMap(testInputTxt1, mapType1)).toEqual(map1);
   });
-  describe("getMapTypeRegex()", () => {});
+  describe("getMapTypes()", () => {
+    test("returns a list of maptypes", () => {
+      const testInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
+      const mapTypes = ["seed-to-soil", "soil-to-fertilizer"];
+      expect(getMapTypes(testInputTxt)).toEqual(mapTypes);
+    });
+  });
 });
