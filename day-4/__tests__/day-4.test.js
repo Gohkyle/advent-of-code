@@ -4,8 +4,7 @@ const {
   convertTxtToJSONFile,
 } = require("../data/convertTxtToJson");
 const { findMatches, calcPoints, sumPoints, part1Answer } = require("../part1");
-
-const testInput = require("../data/test-input.json");
+const { scratchCardTracker } = require("../part2");
 
 describe("setup", () => {
   describe("convertTxtToJson()", () => {
@@ -96,8 +95,73 @@ describe("part1", () => {
     });
   });
   test("test data asssertion", () => {
-    convertTxtToJSONFile("test-input");
-    expect(part1Answer(testInput)).toBe(13);
+    convertTxtToJSONFile("test-input").then(() => {
+      const testInput = require("../data/test-input.json");
+      expect(part1Answer(testInput)).toBe(13);
+    });
   });
 });
-describe("part2", () => {});
+describe("part2", () => {
+  describe("scratchCardTracker()", () => {
+    test("takes 0 matches array, returns tracker array with 1", () => {
+      const firstScratchCard = [[]];
+
+      const tracker = [1];
+
+      expect(scratchCardTracker(firstScratchCard)).toEqual(tracker);
+    });
+    test("tracker array is same length as match scratch", () => {
+      const firstScratchCard = [[], [], []];
+
+      const tracker = [1, 1, 1];
+
+      expect(scratchCardTracker(firstScratchCard)).toEqual(tracker);
+      expect(scratchCardTracker(firstScratchCard)).toHaveLength(
+        firstScratchCard.length
+      );
+    });
+    test("takes 1 matches array, updates tracker array count by 1 for each match", () => {
+      const firstScratchCard = [["48", "83", "86"], [], [], []];
+
+      const tracker = [1, 2, 2, 2];
+
+      expect(scratchCardTracker(firstScratchCard)).toEqual(tracker);
+    });
+    test("tracker updates do not exceed the original scratch cards numbers", () => {
+      const matches = [["48", "83", "86", "17"], [], [], []];
+
+      const tracker = [1, 2, 2, 2];
+
+      expect(scratchCardTracker(matches)).toEqual(tracker);
+      expect(scratchCardTracker(matches)).toHaveLength(matches.length);
+    });
+    test("the number of duplicate scratch card is factored", () => {
+      const matches = [["48", "83", "86", "17"], ["32", "61"], [], []];
+
+      const tracker = [1, 2, 4, 4];
+
+      expect(scratchCardTracker(matches)).toEqual(tracker);
+    });
+    test("test data assertion", () => {
+      convertTxtToJSONFile("test-input")
+        .then(() => {
+          const testInput = require("../data/test-input.json");
+          return findMatches(testInput);
+        })
+        .then((matches) => {
+          expect(scratchCardTracker(matches)).toEqual([1, 2, 4, 8, 14, 1]);
+        });
+    });
+  });
+  test("test assertion for total", () => {
+    convertTxtToJSONFile("test-input")
+      .then(() => {
+        const testInput = require("../data/test-input.json");
+        return findMatches(testInput);
+      })
+      .then((matches) => {
+        const tracker = scratchCardTracker(matches);
+        expect(sumPoints(tracker)).toBe(30);
+      });
+  });
+});
