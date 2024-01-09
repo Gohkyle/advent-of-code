@@ -7,11 +7,18 @@ const convertTxtToJSON = (txt) => {
     const colonIndex = line.search(":");
     const barIndex = line.search(/\|/g);
 
-    const winningNumArr = line.slice(colonIndex + 2, barIndex - 1).split(" ");
-    const cardNumArr = line.slice(barIndex + 2).split(" ");
+    const winningNumDirty = line.slice(colonIndex + 2, barIndex - 1).split(" ");
+    const cardNumDirty = line.slice(barIndex + 2).split(" ");
 
-    return [winningNumArr, cardNumArr];
+    const winningNumbers = removeBlanks(winningNumDirty);
+    const cardNumbers = removeBlanks(cardNumDirty);
+
+    return [winningNumbers, cardNumbers];
   });
+};
+
+const removeBlanks = (arr) => {
+  return arr.filter((value) => value !== "");
 };
 
 const convertTxtToJSONFile = (fileName) => {
@@ -29,4 +36,4 @@ const convertTxtToJSONFile = (fileName) => {
     });
 };
 
-module.exports = { convertTxtToJSON, convertTxtToJSONFile };
+module.exports = { convertTxtToJSON, convertTxtToJSONFile, removeBlanks };
