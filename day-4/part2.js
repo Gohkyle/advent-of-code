@@ -1,6 +1,5 @@
 const { findMatches, sumPoints } = require("./part1");
 
-//create an array that tracks the numbers of scratchcards
 const scratchCardTracker = (scratchCards) => {
   const tracker = Array(scratchCards.length).fill(1);
 
