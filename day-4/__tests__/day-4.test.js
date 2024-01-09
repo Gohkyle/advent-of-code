@@ -1,4 +1,11 @@
-const { convertTxtToJSON } = require("../data/convertTxtToJson");
+const {
+  convertTxtToJSON,
+  removeBlanks,
+  convertTxtToJSONFile,
+} = require("../data/convertTxtToJson");
+const { findMatches, calcPoints, sumPoints, part1Answer } = require("../part1");
+
+const testInput = require("../data/test-input.json");
 
 describe("setup", () => {
   describe("convertTxtToJson()", () => {
@@ -27,9 +34,70 @@ describe("setup", () => {
       ];
       expect(convertTxtToJSON(txt)).toEqual(JSON);
     });
+    test("double spaces, do not produce blank entries", () => {
+      const txt = `Card 1: 1  2 3 4 5 | 1 2 3 41 5 6
+      Card 2: 91 8 7 6 5 | 9 8 7 6  5 4`;
+      const JSON = [
+        [
+          ["1", "2", "3", "4", "5"],
+          ["1", "2", "3", "41", "5", "6"],
+        ],
+        [
+          ["91", "8", "7", "6", "5"],
+          ["9", "8", "7", "6", "5", "4"],
+        ],
+      ];
+      expect(convertTxtToJSON(txt)).toEqual(JSON);
+    });
+  });
+  describe("removeBlanks()", () => {
+    test("removes blank values in an array", () => {
+      const containsBlanks = ["2", ""];
+      const noBlanks = ["2"];
+      expect(removeBlanks(containsBlanks)).toEqual(noBlanks);
+    });
   });
 });
 describe("part1", () => {
-  describe("findMatches()", () => {});
+  describe("findMatches()", () => {
+    test("returns an array which replaces the winning numbers and card numbers with the matching numbers", () => {
+      const scratchCards = [
+        [
+          ["1", "2", "3", "5"],
+          ["1", "2", "3", "4", "5", "6"],
+        ],
+      ];
+      const matchingNumbers = [["1", "2", "3", "5"]];
+
+      const scratchCards1 = [[["1", "2", "3", "5"], ["6"]]];
+      const matchingNumbers1 = [[]];
+
+      expect(findMatches(scratchCards)).toEqual(matchingNumbers);
+      expect(findMatches(scratchCards1)).toEqual(matchingNumbers1);
+    });
+  });
+  describe("calcPoints()", () => {
+    test("takes array of matching number and returns 2 to the power of the length -1", () => {
+      const matchingNumbers = [["1", "2", "3", "5"]];
+
+      expect(calcPoints(matchingNumbers)).toEqual([8]);
+    });
+    test("returns 0 for no matches", () => {
+      const matchingNumbers = [[]];
+
+      expect(calcPoints(matchingNumbers)).toEqual([0]);
+    });
+  });
+  describe("sumPoints()", () => {
+    test("takes an array of points and returns the sum", () => {
+      const points = [1, 2, 3];
+
+      expect(sumPoints(points)).toBe(6);
+    });
+  });
+  test("test data asssertion", () => {
+    convertTxtToJSONFile("test-input");
+    expect(part1Answer(testInput)).toBe(13);
+  });
 });
 describe("part2", () => {});
