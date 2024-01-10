@@ -19,8 +19,17 @@ const convert = (from, to, data) => {
   });
   return { ...data, [to]: values };
 };
+const findMin = (numArr) => {
+  let min = numArr[0];
+  for (const number of numArr) {
+    if (number < min) {
+      min = number;
+    }
+  }
+  return min;
+};
 
-const part1Answer = (data) => {
+const getLocation = (data) => {
   const soil = convert("seed", "soil", data);
   const fertilizer = convert("soil", "fertilizer", soil);
   const water = convert("fertilizer", "water", fertilizer);
@@ -30,4 +39,8 @@ const part1Answer = (data) => {
   const location = convert("humidity", "location", humidity);
   return location.location;
 };
-module.exports = { seedToSoil, convert, part1Answer };
+
+const part1Answer = (data) => {
+  return findMin(getLocation(data));
+};
+module.exports = { seedToSoil, convert, getLocation, findMin, part1Answer };

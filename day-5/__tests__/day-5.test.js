@@ -10,8 +10,9 @@ const {
 const mock = require("mock-fs");
 
 const fs = require("fs");
-const { seedToSoil, convert } = require("../part1");
+const { seedToSoil, convert, findMin, getLocation } = require("../part1");
 
+const testData = require("../data/test-input.json");
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
     test("takes a string, returns regex expression with embedded string ", () => {
@@ -206,6 +207,155 @@ describe("part1.js", () => {
         soil: [51, 50],
       };
       expect(convert("seed", "soil", sampleData)).toEqual(sampleDataWithSoil);
+    });
+    test("works with other maps", () => {
+      const sampleData = {
+        "seed-to-soil": [
+          ["50", "98", "2"],
+          ["52", "50", "48"],
+        ],
+        "soil-to-fertilizer": [
+          ["0", "15", "37"],
+          ["37", "52", "2"],
+          ["39", "0", "15"],
+        ],
+        seed: ["79", "14", "55", "13"],
+      };
+      const sampleDataWithFert = {
+        "seed-to-soil": [
+          ["50", "98", "2"],
+          ["52", "50", "48"],
+        ],
+        "soil-to-fertilizer": [
+          ["0", "15", "37"],
+          ["37", "52", "2"],
+          ["39", "0", "15"],
+        ],
+        seed: ["79", "14", "55", "13"],
+        soil: [81, 14, 57, 13],
+        fertilizer: [81, 53, 57, 52],
+      };
+      const sampleDataWithSoil = convert("seed", "soil", sampleData);
+
+      expect(convert("soil", "fertilizer", sampleDataWithSoil)).toEqual(
+        sampleDataWithFert
+      );
+    });
+    test("this was failing, when I had else statements", () => {
+      const sampleDataWithWater = {
+        "fertilizer-to-water": [
+          ["49", "53", "8"],
+          ["0", "11", "42"],
+          ["42", "0", "7"],
+          ["57", "7", "4"],
+        ],
+        fertilizer: [81, 53, 57, 52],
+        water: [81, 49, 53, 41],
+      };
+      const sampleWithFert = {
+        "fertilizer-to-water": [
+          ["49", "53", "8"],
+          ["0", "11", "42"],
+          ["42", "0", "7"],
+          ["57", "7", "4"],
+        ],
+        fertilizer: [81, 53, 57, 52],
+      };
+    });
+  });
+  describe("data assertion", () => {
+    const testDataWithSoil = convert("seed", "soil", testData);
+    const testDataWithFertilizer = convert(
+      "soil",
+      "fertilizer",
+      testDataWithSoil
+    );
+    const testDataWithWater = convert(
+      "fertilizer",
+      "water",
+      testDataWithFertilizer
+    );
+    const testDataWithLight = convert("water", "light", testDataWithWater);
+    const testDataWithTemperature = convert(
+      "light",
+      "temperature",
+      testDataWithLight
+    );
+    const testDataWithHumidity = convert(
+      "temperature",
+      "humidity",
+      testDataWithTemperature
+    );
+
+    test("fertilizer-to-water", () => {
+      const sampleDataWithWater = {
+        "fertilizer-to-water": [
+          ["49", "53", "8"],
+          ["0", "11", "42"],
+          ["42", "0", "7"],
+          ["57", "7", "4"],
+        ],
+        fertilizer: [81, 53, 57, 52],
+        water: [81, 49, 53, 41],
+      };
+      const sampleWithFert = {
+        "fertilizer-to-water": [
+          ["49", "53", "8"],
+          ["0", "11", "42"],
+          ["42", "0", "7"],
+          ["57", "7", "4"],
+        ],
+        fertilizer: [81, 53, 57, 52],
+      };
+
+      expect(convert("fertilizer", "water", sampleWithFert)).toEqual(
+        sampleDataWithWater
+      );
+    });
+    test("water-to-light", () => {
+      const updatedWithLight = {
+        ...testDataWithWater,
+        light: [74, 42, 46, 34],
+      };
+      expect(convert("water", "light", testDataWithWater)).toEqual(
+        updatedWithLight
+      );
+    });
+    test("light-to-temperature", () => {
+      const updatedWithTemperature = {
+        ...testDataWithLight,
+        temperature: [78, 42, 82, 34],
+      };
+      expect(convert("light", "temperature", testDataWithLight)).toEqual(
+        updatedWithTemperature
+      );
+    });
+    test("temperature-to-humidity", () => {
+      const updatedWithHumidity = {
+        ...testDataWithTemperature,
+        humidity: [78, 43, 82, 35],
+      };
+      expect(
+        convert("temperature", "humidity", testDataWithTemperature)
+      ).toEqual(updatedWithHumidity);
+    });
+    test("humidity-to-location", () => {
+      const updatedWithLocation = {
+        ...testDataWithHumidity,
+        location: [82, 43, 86, 35],
+      };
+      expect(convert("humidity", "location", testDataWithHumidity)).toEqual(
+        updatedWithLocation
+      );
+    });
+  });
+  describe("findMin()", () => {
+    test("for an array of numbers, returns the lowest number", () => {
+      const numbers = [0, 1, 2, 3];
+      expect(findMin(numbers)).toBe(0);
+
+      const location = getLocation(testData);
+      expect(findMin(location)).toBe(35);
     });
   });
 });
