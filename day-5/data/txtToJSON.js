@@ -17,10 +17,12 @@ const getMapTypes = (txt) => {
 
 const formatData = (txt) => {
   const mapTypes = getMapTypes(txt);
+  const mapObj = {};
 
-  return mapTypes.map((mapType) => {
-    return { [mapType]: getMap(txt, mapType) };
+  mapTypes.forEach((mapType) => {
+    Object.assign(mapObj, { [mapType]: getMap(txt, mapType) });
   });
+  return mapObj;
 };
 
 const getSeeds = (txt) => {
@@ -28,11 +30,26 @@ const getSeeds = (txt) => {
   return txt.match(seedsRegex);
 };
 
-const txtToJSON = (fileName) => {
-  fs.readFile(`${__dirname}/${fileName}.txt`, "utf-8")
+const txtToJSON = (filePath) => {
+  return fs
+    .readFile(`${filePath}.txt`, "utf-8")
     .then((txt) => {
-      return formatData(txt);
+      const seeds = getSeeds(txt);
+      const maps = formatData(txt);
+
+      return { ...maps, seeds };
     })
-    .then(() => {});
+    .then((data) => {
+      return fs.writeFile(`${filePath}.json`, JSON.stringify(data), "utf-8");
+    });
 };
-module.exports = { getMapRegex, getMap, getMapTypes, formatData, getSeeds };
+
+txtToJSON(`${__dirname}/test-input`);
+module.exports = {
+  getMapRegex,
+  getMap,
+  getMapTypes,
+  formatData,
+  getSeeds,
+  txtToJSON,
+};
