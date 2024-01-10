@@ -24,8 +24,8 @@ const formatData = (txt) => {
 };
 
 const getSeeds = (txt) => {
-  //   const seedsRegex = /(?<=seeds: (\d+ )*)\d+/g;
-  //   return txt.match(seedsRegex);
+  const seedsRegex = /(?<=seeds: (\d+ )*)\d+/g;
+  return txt.match(seedsRegex);
 };
 
 const txtToJSON = (fileName) => {
