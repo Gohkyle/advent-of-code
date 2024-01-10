@@ -1,21 +1,22 @@
 const seedToSoil = (data) => {
-  const { seeds, "seed-to-soil": seedToSoil } = data;
+  return convert("seed", "soil", data);
+};
 
-  const soil = seeds.map((seed) => {
-    let soilFromSeed = 0;
+const convert = (from, to, data) => {
+  const values = data[from].map((value) => {
+    let newNumber = 0;
 
-    seedToSoil.forEach((line) => {
+    data[`${from}-to-${to}`].forEach((line) => {
       const lowerLimit = +line[1];
       const upperLimit = lowerLimit + +line[2] - 1;
       const conversion = +line[0] - +line[1];
 
-      if (seed <= upperLimit && seed >= lowerLimit) {
-        soilFromSeed = +seed + +conversion;
-      } else soilFromSeed = +seed;
+      if (value <= upperLimit && value >= lowerLimit) {
+        newNumber = +value + +conversion;
+      } else newNumber = +value;
     });
-    return soilFromSeed;
+    return newNumber;
   });
-  return { ...data, soil };
+  return { ...data, [to]: values };
 };
-
-module.exports = { seedToSoil };
+module.exports = { seedToSoil, convert };

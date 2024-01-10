@@ -34,10 +34,10 @@ const txtToJSON = (filePath) => {
   return fs
     .readFile(`${filePath}.txt`, "utf-8")
     .then((txt) => {
-      const seeds = getSeeds(txt);
+      const seed = getSeeds(txt);
       const maps = formatData(txt);
 
-      return { ...maps, seeds };
+      return { ...maps, seed };
     })
     .then((data) => {
       return fs.writeFile(`${filePath}.json`, JSON.stringify(data), "utf-8");

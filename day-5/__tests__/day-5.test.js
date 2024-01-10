@@ -10,7 +10,7 @@ const {
 const mock = require("mock-fs");
 
 const fs = require("fs");
-const { seedToSoil } = require("../part1");
+const { seedToSoil, convert } = require("../part1");
 
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
@@ -22,7 +22,7 @@ describe("txtToJSON.js", () => {
   });
   describe("getMap", () => {
     test("extracts an array from string for the given map type", () => {
-      const testInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48`;
+      const testInputTxt = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48`;
       const mapType = "seed-to-soil";
       const map = [
         ["50", "98", "2"],
@@ -30,7 +30,7 @@ describe("txtToJSON.js", () => {
       ];
 
       expect(getMap(testInputTxt, mapType)).toEqual(map);
-      const testInputTxt1 = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
+      const testInputTxt1 = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
       const mapType1 = "soil-to-fertilizer";
       const map1 = [
         ["0", "15", "37"],
@@ -41,23 +41,23 @@ describe("txtToJSON.js", () => {
       expect(getMap(testInputTxt1, mapType1)).toEqual(map1);
     });
     test("original string is not mutated", () => {
-      const testInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48`;
+      const testInputTxt = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48`;
       const mapType = "seed-to-soil";
 
-      const copyTestInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48`;
+      const copyTestInputTxt = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48`;
       getMap(testInputTxt, mapType);
       expect(testInputTxt).toBe(copyTestInputTxt);
     });
   });
   describe("getMapTypes()", () => {
     test("returns a list of maptypes", () => {
-      const testInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
+      const testInputTxt = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
       const mapTypes = ["seed-to-soil", "soil-to-fertilizer"];
       expect(getMapTypes(testInputTxt)).toEqual(mapTypes);
     });
     test("original txt is not mutated", () => {
-      const testInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
-      const copyTestInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
+      const testInputTxt = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
+      const copyTestInputTxt = `seed: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
 
       getMapTypes(testInputTxt);
       expect(testInputTxt).toEqual(copyTestInputTxt);
@@ -83,9 +83,9 @@ describe("txtToJSON.js", () => {
   describe("getSeeds()", () => {
     test("returns the sequence of numbers after seed:", () => {
       const testInputTxt = `seeds: 79 14 55 13\n`;
-      const seeds = ["79", "14", "55", "13"];
+      const seed = ["79", "14", "55", "13"];
 
-      expect(getSeeds(testInputTxt)).toEqual(seeds);
+      expect(getSeeds(testInputTxt)).toEqual(seed);
     });
   });
   describe("txtToJSON()", () => {
@@ -111,7 +111,7 @@ describe("txtToJSON.js", () => {
     });
     test("file data has correct formatting ", () => {
       const resultJSON = {
-        seeds: ["79", "14", "55", "13"],
+        seed: ["79", "14", "55", "13"],
         "seed-to-soil": [
           ["50", "98", "2"],
           ["52", "50", "48"],
@@ -133,13 +133,13 @@ describe("txtToJSON.js", () => {
 
 describe("part1.js", () => {
   describe("seedToSoil()", () => {
-    test("convert seeds to soil from a one line map, adds to soil key", () => {
+    test("convert seed to soil from a one line map, adds to soil key", () => {
       const sampleData = {
-        seeds: ["14", "13"],
+        seed: ["14", "13"],
         "seed-to-soil": [["50", "13", "2"]],
       };
       const sampleDataWithSoil = {
-        seeds: ["14", "13"],
+        seed: ["14", "13"],
         "seed-to-soil": [["50", "13", "2"]],
         soil: [51, 50],
       };
@@ -147,11 +147,11 @@ describe("part1.js", () => {
     });
     test("if number remains same if not affected by map", () => {
       const sampleData = {
-        seeds: ["79", "14", "55", "13"],
+        seed: ["79", "14", "55", "13"],
         "seed-to-soil": [["50", "13", "2"]],
       };
       const sampleDataWithSoil = {
-        seeds: ["79", "14", "55", "13"],
+        seed: ["79", "14", "55", "13"],
         "seed-to-soil": [["50", "13", "2"]],
         soil: [79, 51, 55, 50],
       };
@@ -159,14 +159,14 @@ describe("part1.js", () => {
     });
     test("executes with multiline map", () => {
       const sampleData = {
-        seeds: ["79", "14", "55", "13"],
+        seed: ["79", "14", "55", "13"],
         "seed-to-soil": [
           ["50", "98", "2"],
           ["52", "50", "48"],
         ],
       };
       const sampleDataWithSoil = {
-        seeds: ["79", "14", "55", "13"],
+        seed: ["79", "14", "55", "13"],
         "seed-to-soil": [
           ["50", "98", "2"],
           ["52", "50", "48"],
@@ -177,14 +177,14 @@ describe("part1.js", () => {
     });
     test("the lines do not interfere with each other", () => {
       const sampleData = {
-        seeds: ["79", "97", "55", "13"],
+        seed: ["79", "97", "55", "13"],
         "seed-to-soil": [
           ["50", "98", "2"],
           ["52", "50", "48"],
         ],
       };
       const sampleDataWithSoil = {
-        seeds: ["79", "97", "55", "13"],
+        seed: ["79", "97", "55", "13"],
         "seed-to-soil": [
           ["50", "98", "2"],
           ["52", "50", "48"],
@@ -192,6 +192,20 @@ describe("part1.js", () => {
         soil: [81, 99, 57, 13],
       };
       expect(seedToSoil(sampleData)).toEqual(sampleDataWithSoil);
+    });
+  });
+  describe("convert()", () => {
+    test("extracted seedToSoil functionality,takes from string and to string, returns conversion on the to key", () => {
+      const sampleData = {
+        seed: ["14", "13"],
+        "seed-to-soil": [["50", "13", "2"]],
+      };
+      const sampleDataWithSoil = {
+        seed: ["14", "13"],
+        "seed-to-soil": [["50", "13", "2"]],
+        soil: [51, 50],
+      };
+      expect(convert("seed", "soil", sampleData)).toEqual(sampleDataWithSoil);
     });
   });
 });
