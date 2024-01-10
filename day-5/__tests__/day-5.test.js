@@ -13,6 +13,7 @@ const fs = require("fs");
 const { seedToSoil, convert, findMin, getLocation } = require("../part1");
 
 const testData = require("../data/test-input.json");
+const { setNewSeed, updateSeedOnAlmanac, part2Answer } = require("../part2");
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
     test("takes a string, returns regex expression with embedded string ", () => {
@@ -357,5 +358,47 @@ describe("part1.js", () => {
       const location = getLocation(testData);
       expect(findMin(location)).toBe(35);
     });
+  });
+});
+
+describe("part2.js", () => {
+  describe("setNewSeed()", () => {
+    test("returns array of two arrays, first array being the start values, and the second array being the ranges", () => {
+      const data = { seed: ["79", "14", "55", "13"] };
+      const newSeeds = [
+        ["79", "55"],
+        ["14", "13"],
+      ];
+      expect(setNewSeed(data)).toEqual(newSeeds);
+    });
+  });
+  describe("updateSeedOnAlmanac()", () => {
+    test("populates the seed with a range of numbers", () => {
+      const data = { seed: ["79", "14", "55", "13"] };
+      const updatedAlmanac = {
+        seed: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      };
+      expect(updateSeedOnAlmanac(data, 3, 12)).toEqual(updatedAlmanac);
+    });
+    test("returns a new obj", () => {
+      const data = { seed: ["79", "14", "55", "13"] };
+      expect(updateSeedOnAlmanac(data, 3, 12)).not.toEqual(data);
+    });
+    test("does not mutate original obj", () => {
+      const data = { seed: ["79", "14", "55", "13"] };
+      const copyData = { seed: ["79", "14", "55", "13"] };
+      updateSeedOnAlmanac(data, 3, 12);
+      expect(data).toEqual(copyData);
+    });
+    test("works for boths string and number input", () => {
+      const data = { seed: ["79", "14", "55", "13"] };
+      const updatedAlmanac = {
+        seed: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      };
+      expect(updateSeedOnAlmanac(data, "3", "12")).toEqual(updatedAlmanac);
+    });
+  });
+  describe("data test assertion ", () => {
+    expect(part2Answer(testData)).toBe(46);
   });
 });
