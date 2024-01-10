@@ -15,16 +15,24 @@ const getMapTypes = (txt) => {
   return txt.match(mapTypeRegex);
 };
 
-const txtToJSON = (fileName) => {
-  fs.readFile(`${__dirname}/${fileName}.txt`, "utf-8").then(() => {
-    const mapTypes = [
-      "seed-to-soil",
-      "soil-to-fertilizer",
-      "fertilizer-to-water",
-      "water-to-light",
-      "light-to-temp",
-      "temp-to-humidity",
-    ];
+const formatData = (txt) => {
+  const mapTypes = getMapTypes(txt);
+
+  return mapTypes.map((mapType) => {
+    return { [mapType]: getMap(txt, mapType) };
   });
 };
-module.exports = { getMapRegex, getMap, getMapTypes };
+
+const getSeeds = (txt) => {
+  //   const seedsRegex = /(?<=seeds: (\d+ )*)\d+/g;
+  //   return txt.match(seedsRegex);
+};
+
+const txtToJSON = (fileName) => {
+  fs.readFile(`${__dirname}/${fileName}.txt`, "utf-8")
+    .then((txt) => {
+      return formatData(txt);
+    })
+    .then(() => {});
+};
+module.exports = { getMapRegex, getMap, getMapTypes, formatData, getSeeds };
