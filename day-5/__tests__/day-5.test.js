@@ -290,21 +290,15 @@ describe("part1.js", () => {
     });
   });
   describe("mapNumber()", () => {
-    test("returns an object, with keys number and mapIndex", () => {
-      const ranges = [["1", "8", "2"]];
-
-      expect(mapNumber(9, ranges)).toHaveProperty("number");
-      expect(mapNumber(9, ranges)).toHaveProperty("mapIndex");
-    });
     test("takes a number and a bunch of ranges and returns new number", () => {
       const ranges = [["1", "8", "2"]];
 
-      expect(mapNumber(9, ranges).number).toEqual(2);
+      expect(mapNumber(9, ranges)).toBe(2);
     });
     test("takes a number and a bunch of ranges and returns the number if no map", () => {
       const ranges = [["90, 12, 9"]];
 
-      expect(mapNumber(9, ranges).number).toBe(9);
+      expect(mapNumber(9, ranges)).toBe(9);
     });
   });
   describe("data assertion", () => {
@@ -520,8 +514,8 @@ describe("part2.js", () => {
         const range = [10, 20];
 
         const map = [
-          [100, 0, 4],
           [1000, 8, 4],
+          [100, 0, 4],
           [10000, 15, 4],
         ];
 

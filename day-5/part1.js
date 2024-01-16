@@ -1,13 +1,12 @@
 const mapNumber = (number, maps) => {
-  let newNumber = { number: +number };
+  let newNumber = +number;
   maps.forEach((map, index) => {
     const lowerLimit = +map[1];
     const upperLimit = lowerLimit + +map[2];
     const conversion = +map[0] - +map[1];
 
     if (number < upperLimit && number >= lowerLimit) {
-      newNumber.number += +conversion;
-      newNumber.mapIndex = index;
+      newNumber += +conversion;
     }
   });
   return newNumber;
@@ -21,7 +20,7 @@ const convertF = (from, to) => {
 
 const convert = (from, to, data) => {
   const values = data[from].map((value) => {
-    return mapNumber(value, data[`${from}-to-${to}`]).number;
+    return mapNumber(value, data[`${from}-to-${to}`]);
   });
   return { ...data, [to]: values };
 };
