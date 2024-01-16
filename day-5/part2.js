@@ -1,31 +1,55 @@
-const { findMin, part1Answer } = require("./part1");
+const { mapNumber } = require("./part1");
 
-const setNewSeed = ({ seed }) => {
-  const startValues = [];
-  const ranges = [];
-  seed.forEach((value, index) => {
-    if (index % 2 === 0) {
-      startValues.push(value);
-    } else ranges.push(value);
+const setNewSeed = (data) => {
+  const seed = [];
+  for (let i = 0; i < data.seed.length; i += 2) {
+    const lower = +data.seed[i];
+    const upper = +data.seed[i] + +data.seed[i + 1] - 1;
+    seed.push([lower, upper]);
+  }
+
+  return { ...data, seed };
+};
+
+const mapRange = ([range], maps) => {
+  const [lowerR, upperR] = range;
+
+  const subRanges = maps.map((map) => {
+    return +map[1];
   });
-  return [startValues, ranges];
-};
+  console.log(subRanges);
 
-const updateSeedOnAlmanac = (almanac, seedStart, seedRange) => {
-  return {
-    ...almanac,
-    seed: Array.from(new Array(+seedRange), (_, i) => +seedStart + i),
-  };
-};
+  const newRanges = [];
 
-const part2Answer = (data) => {
-  const [seedStarts, seedRanges] = setNewSeed(data);
+  maps.forEach((map) => {
+    const lowerM = +map[1];
+    const upperM = lowerM + +map[2] - 1;
+    const conversion = +map[0] - +map[1];
 
-  const locationMins = seedStarts.map((seedStart, index) => {
-    const newAlmanac = updateSeedOnAlmanac(data, seedStart, seedRanges[index]);
-    return part1Answer(newAlmanac);
+    const isLowerMInR = lowerM >= lowerR && lowerM <= upperR;
+    const isUpperMInR = upperM <= upperR && upperM >= lowerR;
+
+    if (isLowerMInR && isUpperMInR) {
+      if (lowerM !== lowerR) {
+        newRanges.push([lowerR, lowerM - 1]);
+      }
+      newRanges.push([lowerM + conversion, upperM + conversion]);
+
+      if (upperM !== upperR) {
+        newRanges.push([upperM + 1, upperR]);
+      }
+    } else if (isLowerMInR && !isUpperMInR) {
+      newRanges.push([lowerR, lowerM - 1]);
+      newRanges.push([lowerM + conversion, upperR + conversion]);
+    } else if (!isLowerMInR && isUpperMInR) {
+      newRanges.push([lowerR + conversion, upperM + conversion]);
+      newRanges.push([upperM + 1, upperR]);
+    } else newRanges.push([lowerR, upperR]);
   });
-
-  return findMin(locationMins);
+  console.log(newRanges);
+  return newRanges;
 };
-module.exports = { setNewSeed, updateSeedOnAlmanac, part2Answer };
+//need to map ranges
+//binary searches?
+
+module.exports = { setNewSeed, mapRange };
