@@ -26,7 +26,7 @@ const {
 } = require("../part1");
 
 const testData = require("../data/test-input.json");
-const { setNewSeed, convertRanges } = require("../part2");
+const { setNewSeed, convertRanges, mapRange } = require("../part2");
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
     test("takes a string, returns regex expression with embedded string ", () => {
@@ -146,7 +146,7 @@ describe("txtToJSON.js", () => {
   });
 });
 
-describe.only("part1.js", () => {
+describe("part1.js", () => {
   describe("seedToSoil()", () => {
     test("convert seed to soil from a one line map, adds to soil key", () => {
       const sampleData = {
@@ -290,15 +290,21 @@ describe.only("part1.js", () => {
     });
   });
   describe("mapNumber()", () => {
+    test("returns an object, with keys number and mapIndex", () => {
+      const ranges = [["1", "8", "2"]];
+
+      expect(mapNumber(9, ranges)).toHaveProperty("number");
+      expect(mapNumber(9, ranges)).toHaveProperty("mapIndex");
+    });
     test("takes a number and a bunch of ranges and returns new number", () => {
       const ranges = [["1", "8", "2"]];
 
-      expect(mapNumber(9, ranges)).toBe(2);
+      expect(mapNumber(9, ranges).number).toEqual(2);
     });
     test("takes a number and a bunch of ranges and returns the number if no map", () => {
       const ranges = [["90, 12, 9"]];
 
-      expect(mapNumber(9, ranges)).toBe(9);
+      expect(mapNumber(9, ranges).number).toBe(9);
     });
   });
   describe("data assertion", () => {
@@ -371,7 +377,6 @@ describe.only("part1.js", () => {
       expect(findMin(numbers)).toBe(0);
 
       const location = getLocation(testData);
-      console.log(location);
       expect(findMin(location)).toBe(35);
     });
   });
@@ -403,36 +408,129 @@ describe("part2.js", () => {
       expect(data).toEqual(copyData);
     });
   });
-  describe("convertRanges()", () => {
-    describe("checks range against map, and produces new ranges", () => {
+  describe("mapRanges()", () => {
+    describe("checks single map against range, and produces new ranges", () => {
       test("mapping converts the entire range", () => {
-        const testData = {
-          seed: [[79, 92]],
-          "seed-to-soil": [["50 79 14"]],
-        };
-        const testResult = {
-          seed: [[79, 92]],
-          "seed-to-soil": [["50 79 14"]],
-          soil: [[[50, 63]]],
-        };
+        const range = [[79, 92]];
+        const map = [["50", "79", "14"]];
 
-        expect(convertRanges("seed", "soil", testData)).toEqual(testResult);
+        const newRange = [[50, 63]];
+
+        expect(mapRange(range, map)).toEqual(newRange);
       });
-      test("mapping occurs for a part of the range", () => {
-        const testData = {
-          seed: [[79, 92]],
-          "seed-to-soil": [["50 90 9"]],
-        };
-        const testResult = {
-          seed: [[79, 92]],
-          "seed-to-soil": [["50 90 9"]],
-          soil: [
-            [
-              [79, 89],
-              [50, 52],
-            ],
-          ],
-        };
+      test("mapping is out of the range", () => {
+        const range = [[79, 92]];
+        const map = [["50", "94", "14"]];
+
+        const newRange = [[79, 92]];
+
+        expect(mapRange(range, map)).toEqual(newRange);
+      });
+      describe("mapping occurs for a part of the range", () => {
+        test("mapping converts the entire range", () => {
+          const range = [[79, 92]];
+          const map = [["50", "83", "3"]];
+
+          const newRange = [
+            [79, 82],
+            [50, 52],
+            [86, 92],
+          ];
+
+          expect(mapRange(range, map)).toEqual(newRange);
+        });
+        test("maps part of the range at the upper limit", () => {
+          const range = [[79, 92]];
+          const map = [["50", "90", "14"]];
+
+          const newRange = [
+            [79, 89],
+            [50, 52],
+          ];
+          expect(mapRange(range, map)).toEqual(newRange);
+        });
+        test("maps part of the range at the upper limit, edge cases", () => {
+          const range = [[79, 92]];
+          const map = [["50", "92", "14"]];
+
+          const newRange = [
+            [79, 91],
+            [50, 50],
+          ];
+          const map1 = [["50", "90", "4"]];
+
+          const newRange1 = [
+            [79, 89],
+            [50, 52],
+          ];
+          expect(mapRange(range, map)).toEqual(newRange);
+          expect(mapRange(range, map1)).toEqual(newRange1);
+        });
+
+        test("map part of the range at the lower limit", () => {
+          const range = [[79, 92]];
+          const map = [["50", "70", "14"]];
+
+          const newRange = [
+            [59, 63],
+            [84, 92],
+          ];
+          expect(mapRange(range, map)).toEqual(newRange);
+        });
+        test("map part of the range at the lower limit, edge cases", () => {
+          const range = [[79, 92]];
+
+          const map = [["50", "70", "10"]];
+          const newRange = [
+            [59, 59],
+            [80, 92],
+          ];
+
+          const map1 = [["50", "79", "10"]];
+          const newRange1 = [
+            [50, 59],
+            [89, 92],
+          ];
+          expect(mapRange(range, map)).toEqual(newRange);
+          expect(mapRange(range, map1)).toEqual(newRange1);
+        });
+      });
+    });
+    test("checks multiple maps against range", () => {
+      const range = [[10, 20]];
+      const map = [
+        [100, 0, 4],
+        [1000, 8, 4],
+        [10000, 15, 4],
+      ];
+
+      const newRange = [
+        [1010, 1011],
+        [12, 14],
+        [10015, 10019],
+        [20, 20],
+      ];
+
+      expect(mapRange(range, map)).toEqual(newRange);
+    });
+  });
+  describe("findSubRanges()", () => {
+    describe("takes a map and ranges, returns a new ranges array, with subdivisions according to the map", () => {
+      test("", () => {
+        const range = [10, 20];
+
+        const map = [
+          [100, 0, 4],
+          [1000, 8, 4],
+          [10000, 15, 4],
+        ];
+
+        const newRange = [
+          [10, 11],
+          [12, 14],
+          [15, 19],
+          [20, 20],
+        ];
       });
     });
   });
