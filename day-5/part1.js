@@ -12,13 +12,13 @@ const mapNumber = (number, maps) => {
   return newNumber;
 };
 
-const convertF = (from, to) => {
+const convertF = (from, to, fn) => {
   return function fromTo(data) {
-    return convert(from, to, data);
+    return fn(from, to, data);
   };
 };
 
-const convert = (from, to, data) => {
+const convertNum = (from, to, data) => {
   const values = data[from].map((value) => {
     return mapNumber(value, data[`${from}-to-${to}`]);
   });
@@ -35,13 +35,13 @@ const findMin = (numArr) => {
   return min;
 };
 
-const seedToSoil = convertF("seed", "soil");
-const soilToFert = convertF("soil", "fertilizer");
-const fertToWater = convertF("fertilizer", "water");
-const waterToLight = convertF("water", "light");
-const lightToTemp = convertF("light", "temperature");
-const tempToHumidity = convertF("temperature", "humidity");
-const humidityToLocation = convertF("humidity", "location");
+const seedToSoil = convertF("seed", "soil", convertNum);
+const soilToFert = convertF("soil", "fertilizer", convertNum);
+const fertToWater = convertF("fertilizer", "water", convertNum);
+const waterToLight = convertF("water", "light", convertNum);
+const lightToTemp = convertF("light", "temperature", convertNum);
+const tempToHumidity = convertF("temperature", "humidity", convertNum);
+const humidityToLocation = convertF("humidity", "location", convertNum);
 
 const getLocation = (data) => {
   const soil = seedToSoil(data);
@@ -59,7 +59,7 @@ const part1Answer = (data) => {
 };
 module.exports = {
   seedToSoil,
-  convert,
+  convertNum,
   getLocation,
   findMin,
   part1Answer,

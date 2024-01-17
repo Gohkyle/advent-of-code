@@ -12,7 +12,7 @@ const mock = require("mock-fs");
 const fs = require("fs");
 const {
   seedToSoil,
-  convert,
+  convertNum,
   findMin,
   getLocation,
   mapNumber,
@@ -209,7 +209,7 @@ describe("part1.js", () => {
       expect(seedToSoil(sampleData)).toEqual(sampleDataWithSoil);
     });
   });
-  describe("convert()", () => {
+  describe("convertNum()", () => {
     test("extracted seedToSoil functionality,takes from string and to string, returns conversion on the to key", () => {
       const sampleData = {
         seed: ["14", "13"],
@@ -220,7 +220,9 @@ describe("part1.js", () => {
         "seed-to-soil": [["50", "13", "2"]],
         soil: [51, 50],
       };
-      expect(convert("seed", "soil", sampleData)).toEqual(sampleDataWithSoil);
+      expect(convertNum("seed", "soil", sampleData)).toEqual(
+        sampleDataWithSoil
+      );
     });
     test("works with other maps", () => {
       const sampleData = {
@@ -249,16 +251,16 @@ describe("part1.js", () => {
         soil: [81, 14, 57, 13],
         fertilizer: [81, 53, 57, 52],
       };
-      const sampleDataWithSoil = convert("seed", "soil", sampleData);
+      const sampleDataWithSoil = convertNum("seed", "soil", sampleData);
 
-      expect(convert("soil", "fertilizer", sampleDataWithSoil)).toEqual(
+      expect(convertNum("soil", "fertilizer", sampleDataWithSoil)).toEqual(
         sampleDataWithFert
       );
     });
   });
   describe("convertF", () => {
     test("returns a function", () => {
-      expect(typeof convertF("seed", "soil", convert)).toBe("function");
+      expect(typeof convertF("seed", "soil", convertNum)).toBe("function");
     });
     test("function returned, can do the same as seedToSoil", () => {
       const sampleData = {
@@ -270,7 +272,7 @@ describe("part1.js", () => {
         "seed-to-soil": [["50", "13", "2"]],
         soil: [51, 50],
       };
-      const facSeedToSoil = convertF("seed", "soil", convert);
+      const facSeedToSoil = convertF("seed", "soil", convertNum);
 
       expect(facSeedToSoil(sampleData)).toEqual(sampleDataWithSoil);
     });
@@ -284,9 +286,28 @@ describe("part1.js", () => {
         "seed-to-soil": [["50", "13", "2"]],
         soil: [51, 50],
       };
-      const facSeedToSoil = convertF("seed", "soil", convert);
+      const facSeedToSoil = convertF("seed", "soil", convertNum);
 
       expect(facSeedToSoil(sampleData)).toEqual(sampleDataWithSoil);
+    });
+    test("can take convertRanges function", () => {
+      const sampleData = {
+        seed: ["14", "13"],
+        "seed-to-soil": [["50", "13", "2"]],
+      };
+      const sampleDataWithSoil = {
+        seed: [[14, 26]],
+        "seed-to-soil": [["50", "13", "2"]],
+        soil: [
+          [50, 50],
+          [15, 26],
+        ],
+      };
+      const seedRange = setNewSeed(sampleData);
+
+      const facSeedToSoilR = convertF("seed", "soil", convertNum);
+
+      expect(facSeedToSoilR(seedRange)).toEqual(sampleDataWithSoil);
     });
   });
   describe("mapNumber()", () => {

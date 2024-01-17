@@ -66,4 +66,5 @@ const convertRanges = (from, to, data) => {
   });
   return { ...data, [to]: ranges.flat() };
 };
+
 module.exports = { setNewSeed, mapRange, convertRanges };
