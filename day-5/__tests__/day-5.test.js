@@ -406,11 +406,15 @@ describe("part2.js", () => {
     describe("checks single map against range, and produces new ranges", () => {
       test("mapping converts the entire range", () => {
         const range = [[79, 92]];
-        const map = [["50", "79", "14"]];
 
+        const map = [["50", "79", "14"]];
         const newRange = [[50, 63]];
 
+        const map1 = [["50", "78", "16"]];
+        const newRange1 = [[51, 64]];
+
         expect(mapRange(range, map)).toEqual(newRange);
+        expect(mapRange(range, map1)).toEqual(newRange1);
       });
       test("mapping is out of the range", () => {
         const range = [[79, 92]];
@@ -421,7 +425,7 @@ describe("part2.js", () => {
         expect(mapRange(range, map)).toEqual(newRange);
       });
       describe("mapping occurs for a part of the range", () => {
-        test("mapping converts the entire range", () => {
+        test("mapping is within the  range", () => {
           const range = [[79, 92]];
           const map = [["50", "83", "3"]];
 
@@ -457,8 +461,15 @@ describe("part2.js", () => {
             [79, 89],
             [50, 52],
           ];
+          const map2 = [["50", "90", "3"]];
+
+          const newRange2 = [
+            [79, 89],
+            [50, 52],
+          ];
           expect(mapRange(range, map)).toEqual(newRange);
           expect(mapRange(range, map1)).toEqual(newRange1);
+          expect(mapRange(range, map2)).toEqual(newRange2);
         });
 
         test("map part of the range at the lower limit", () => {
@@ -485,47 +496,32 @@ describe("part2.js", () => {
             [50, 59],
             [89, 92],
           ];
+
+          const map2 = [["50", "78", "15"]];
+          const newRange2 = [[51, 64]];
           expect(mapRange(range, map)).toEqual(newRange);
           expect(mapRange(range, map1)).toEqual(newRange1);
+          expect(mapRange(range, map2)).toEqual(newRange2);
         });
       });
     });
     test("checks multiple maps against range", () => {
       const range = [[10, 20]];
       const map = [
-        [100, 0, 4],
         [1000, 8, 4],
+        [100, 0, 4],
         [10000, 15, 4],
+        [0, 19, 6],
       ];
 
       const newRange = [
-        [1010, 1011],
+        [1002, 1003],
         [12, 14],
-        [10015, 10019],
-        [20, 20],
+        [10000, 10003],
+        [0, 1],
       ];
 
       expect(mapRange(range, map)).toEqual(newRange);
-    });
-  });
-  describe("findSubRanges()", () => {
-    describe("takes a map and ranges, returns a new ranges array, with subdivisions according to the map", () => {
-      test("", () => {
-        const range = [10, 20];
-
-        const map = [
-          [1000, 8, 4],
-          [100, 0, 4],
-          [10000, 15, 4],
-        ];
-
-        const newRange = [
-          [10, 11],
-          [12, 14],
-          [15, 19],
-          [20, 20],
-        ];
-      });
     });
   });
 });

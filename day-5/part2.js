@@ -14,38 +14,50 @@ const setNewSeed = (data) => {
 const mapRange = ([range], maps) => {
   const [lowerR, upperR] = range;
 
-  const subRanges = maps.map((map) => {
-    return +map[1];
+  const subRanges = maps.sort(function (a, b) {
+    return a[1] - b[1];
   });
-  console.log(subRanges);
 
   const newRanges = [];
 
-  maps.forEach((map) => {
-    const lowerM = +map[1];
-    const upperM = lowerM + +map[2] - 1;
-    const conversion = +map[0] - +map[1];
+  for (let i = 0; i < subRanges.length; i++) {
+    const lowerM = +subRanges[i][1];
+    const lowerM1 = i < subRanges.length - 1 ? +subRanges[i + 1][1] : upperR;
+    const upperM = lowerM + +subRanges[i][2] - 1;
 
-    const isLowerMInR = lowerM >= lowerR && lowerM <= upperR;
-    const isUpperMInR = upperM <= upperR && upperM >= lowerR;
+    const conversion = +subRanges[i][0] - +subRanges[i][1];
 
-    if (isLowerMInR && isUpperMInR) {
-      if (lowerM !== lowerR) {
+    if ((lowerM > upperR || upperM < lowerR) && lowerM1 === upperR) {
+      newRanges.push([lowerR, upperR]);
+    } else if (lowerM < lowerR && upperM > upperR) {
+      newRanges.push([lowerR + conversion, upperR + conversion]);
+    } else if (lowerM < lowerR && upperM <= upperR && upperM >= lowerR) {
+      newRanges.push([lowerR + conversion, upperM + conversion]);
+      if (upperM !== upperR) {
+        if (lowerM1 !== upperR) {
+          newRanges.push([upperM + 1, lowerM1 - 1]);
+        } else newRanges.push([upperM + 1, lowerM1]);
+      }
+    } else if (
+      lowerM >= lowerR &&
+      lowerM <= upperR &&
+      upperM <= upperR &&
+      upperM >= lowerR
+    ) {
+      if (lowerM !== lowerR && i === 0) {
         newRanges.push([lowerR, lowerM - 1]);
       }
       newRanges.push([lowerM + conversion, upperM + conversion]);
-
-      if (upperM !== upperR) {
-        newRanges.push([upperM + 1, upperR]);
+      if (upperM !== upperR && upperM + 1 !== lowerM1) {
+        newRanges.push([upperM + 1, lowerM1]);
       }
-    } else if (isLowerMInR && !isUpperMInR) {
-      newRanges.push([lowerR, lowerM - 1]);
+    } else if (lowerM >= lowerR && lowerM <= upperR && upperM > upperR) {
+      if (i === 0) {
+        newRanges.push([lowerR, lowerM - 1]);
+      }
       newRanges.push([lowerM + conversion, upperR + conversion]);
-    } else if (!isLowerMInR && isUpperMInR) {
-      newRanges.push([lowerR + conversion, upperM + conversion]);
-      newRanges.push([upperM + 1, upperR]);
-    } else newRanges.push([lowerR, upperR]);
-  });
+    }
+  }
   console.log(newRanges);
   return newRanges;
 };
