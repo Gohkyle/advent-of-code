@@ -258,7 +258,7 @@ describe("part1.js", () => {
   });
   describe("convertF", () => {
     test("returns a function", () => {
-      expect(typeof convertF("seed", "soil")).toBe("function");
+      expect(typeof convertF("seed", "soil", convert)).toBe("function");
     });
     test("function returned, can do the same as seedToSoil", () => {
       const sampleData = {
@@ -270,7 +270,7 @@ describe("part1.js", () => {
         "seed-to-soil": [["50", "13", "2"]],
         soil: [51, 50],
       };
-      const facSeedToSoil = convertF("seed", "soil");
+      const facSeedToSoil = convertF("seed", "soil", convert);
 
       expect(facSeedToSoil(sampleData)).toEqual(sampleDataWithSoil);
     });
@@ -284,7 +284,7 @@ describe("part1.js", () => {
         "seed-to-soil": [["50", "13", "2"]],
         soil: [51, 50],
       };
-      const facSeedToSoil = convertF("seed", "soil");
+      const facSeedToSoil = convertF("seed", "soil", convert);
 
       expect(facSeedToSoil(sampleData)).toEqual(sampleDataWithSoil);
     });
@@ -544,4 +544,5 @@ describe("part2.js", () => {
       );
     });
   });
+  describe("test data assertion", () => {});
 });

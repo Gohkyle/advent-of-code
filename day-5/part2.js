@@ -64,6 +64,6 @@ const convertRanges = (from, to, data) => {
   const ranges = data[from].map((range) => {
     return mapRange(range, data[`${from}-to-${to}`]);
   });
-  return { ...data, [to]: ranges };
+  return { ...data, [to]: ranges.flat() };
 };
 module.exports = { setNewSeed, mapRange, convertRanges };
