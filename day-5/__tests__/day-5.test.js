@@ -26,7 +26,7 @@ const {
 } = require("../part1");
 
 const testData = require("../data/test-input.json");
-const { setNewSeed, mapRange } = require("../part2");
+const { setNewSeed, mapRange, convertRanges } = require("../part2");
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
     test("takes a string, returns regex expression with embedded string ", () => {
@@ -405,7 +405,7 @@ describe("part2.js", () => {
   describe("mapRanges()", () => {
     describe("checks single map against range, and produces new ranges", () => {
       test("mapping converts the entire range", () => {
-        const range = [[79, 92]];
+        const range = [79, 92];
 
         const map = [["50", "79", "14"]];
         const newRange = [[50, 63]];
@@ -417,7 +417,7 @@ describe("part2.js", () => {
         expect(mapRange(range, map1)).toEqual(newRange1);
       });
       test("mapping is out of the range", () => {
-        const range = [[79, 92]];
+        const range = [79, 92];
         const map = [["50", "94", "14"]];
 
         const newRange = [[79, 92]];
@@ -426,7 +426,7 @@ describe("part2.js", () => {
       });
       describe("mapping occurs for a part of the range", () => {
         test("mapping is within the  range", () => {
-          const range = [[79, 92]];
+          const range = [79, 92];
           const map = [["50", "83", "3"]];
 
           const newRange = [
@@ -438,7 +438,7 @@ describe("part2.js", () => {
           expect(mapRange(range, map)).toEqual(newRange);
         });
         test("maps part of the range at the upper limit", () => {
-          const range = [[79, 92]];
+          const range = [79, 92];
           const map = [["50", "90", "14"]];
 
           const newRange = [
@@ -448,7 +448,7 @@ describe("part2.js", () => {
           expect(mapRange(range, map)).toEqual(newRange);
         });
         test("maps part of the range at the upper limit, edge cases", () => {
-          const range = [[79, 92]];
+          const range = [79, 92];
           const map = [["50", "92", "14"]];
 
           const newRange = [
@@ -473,7 +473,7 @@ describe("part2.js", () => {
         });
 
         test("map part of the range at the lower limit", () => {
-          const range = [[79, 92]];
+          const range = [79, 92];
           const map = [["50", "70", "14"]];
 
           const newRange = [
@@ -483,7 +483,7 @@ describe("part2.js", () => {
           expect(mapRange(range, map)).toEqual(newRange);
         });
         test("map part of the range at the lower limit, edge cases", () => {
-          const range = [[79, 92]];
+          const range = [79, 92];
 
           const map = [["50", "70", "10"]];
           const newRange = [
@@ -506,7 +506,7 @@ describe("part2.js", () => {
       });
     });
     test("checks multiple maps against range", () => {
-      const range = [[10, 20]];
+      const range = [10, 20];
       const map = [
         [1000, 8, 4],
         [100, 0, 4],
@@ -531,10 +531,10 @@ describe("part2.js", () => {
         "seed-to-soil": [["50", "13", "2"]],
       };
       const sampleDataWithSoil = {
-        seed: [14, 26],
+        seed: [[14, 26]],
         "seed-to-soil": [["50", "13", "2"]],
         soil: [
-          [50, 50],
+          [51, 51],
           [15, 26],
         ],
       };

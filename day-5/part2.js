@@ -9,7 +9,7 @@ const setNewSeed = (data) => {
   return { ...data, seed };
 };
 
-const mapRange = ([range], maps) => {
+const mapRange = (range, maps) => {
   const [lowerR, upperR] = range;
 
   const subRanges = maps.sort(function (a, b) {
@@ -60,5 +60,10 @@ const mapRange = ([range], maps) => {
   return newRanges;
 };
 
-const convertRanges = () => {};
+const convertRanges = (from, to, data) => {
+  const ranges = data[from].map((range) => {
+    return mapRange(range, data[`${from}-to-${to}`]);
+  });
+  return { ...data, [to]: ranges };
+};
 module.exports = { setNewSeed, mapRange, convertRanges };
