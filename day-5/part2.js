@@ -1,5 +1,3 @@
-const { mapNumber } = require("./part1");
-
 const setNewSeed = (data) => {
   const seed = [];
   for (let i = 0; i < data.seed.length; i += 2) {
@@ -58,10 +56,9 @@ const mapRange = ([range], maps) => {
       newRanges.push([lowerM + conversion, upperR + conversion]);
     }
   }
-  console.log(newRanges);
+
   return newRanges;
 };
-//need to map ranges
-//binary searches?
 
-module.exports = { setNewSeed, mapRange };
+const convertRanges = () => {};
+module.exports = { setNewSeed, mapRange, convertRanges };

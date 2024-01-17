@@ -26,7 +26,7 @@ const {
 } = require("../part1");
 
 const testData = require("../data/test-input.json");
-const { setNewSeed, convertRanges, mapRange } = require("../part2");
+const { setNewSeed, mapRange } = require("../part2");
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
     test("takes a string, returns regex expression with embedded string ", () => {
@@ -522,6 +522,26 @@ describe("part2.js", () => {
       ];
 
       expect(mapRange(range, map)).toEqual(newRange);
+    });
+  });
+  describe("convertRanges()", () => {
+    test("takes the data and convert ranges for the given from and to arguments", () => {
+      const sampleData = {
+        seed: ["14", "13"],
+        "seed-to-soil": [["50", "13", "2"]],
+      };
+      const sampleDataWithSoil = {
+        seed: [14, 26],
+        "seed-to-soil": [["50", "13", "2"]],
+        soil: [
+          [50, 50],
+          [15, 26],
+        ],
+      };
+      const seedsRange = setNewSeed(sampleData);
+      expect(convertRanges("seed", "soil", seedsRange)).toEqual(
+        sampleDataWithSoil
+      );
     });
   });
 });
