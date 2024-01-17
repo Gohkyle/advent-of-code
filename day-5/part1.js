@@ -1,6 +1,6 @@
 const mapNumber = (number, maps) => {
   let newNumber = +number;
-  maps.forEach((map, index) => {
+  maps.forEach((map) => {
     const lowerLimit = +map[1];
     const upperLimit = lowerLimit + +map[2];
     const conversion = +map[0] - +map[1];
