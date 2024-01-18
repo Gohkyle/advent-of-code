@@ -1,4 +1,4 @@
-const { convertF } = require("./part1");
+const { convertF, findMin } = require("./part1");
 
 const setNewSeed = (data) => {
   const seed = [];
