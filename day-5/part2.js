@@ -34,9 +34,12 @@ const mapRange = (range, maps) => {
     else if (lowerM < lowerR && upperM <= upperR && upperM >= lowerR) {
       newRanges.push([lowerR + conversion, upperM + conversion]);
       // If not the last map, and the next one isn't consecutive
-      if (lowerM1 !== upperR && upperM + 1 !== lowerM1 && upperM !== upperR) {
+      if (lowerM1 !== upperR && upperM + 1 !== lowerM1) {
         newRanges.push([upperM + 1, lowerM1 - 1]);
-      } else newRanges.push([upperM + 1, lowerM1]);
+      }
+      if (lowerM1 === upperR && upperM !== upperR) {
+        newRanges.push([upperM + 1, lowerM1]);
+      }
     }
 
     //maps in the range
@@ -46,14 +49,19 @@ const mapRange = (range, maps) => {
       upperM <= upperR &&
       upperM >= lowerR
     ) {
-      if (lowerM !== lowerR && i === 0) {
+      if (lowerM !== lowerR && newRanges.length === 0) {
         newRanges.push([lowerR, lowerM - 1]);
       }
       newRanges.push([lowerM + conversion, upperM + conversion]);
-      if (upperM !== upperR && upperM + 1 !== lowerM1) {
+
+      if (lowerM1 !== upperR && upperM + 1 !== lowerM1) {
+        newRanges.push([upperM + 1, lowerM1 - 1]);
+      }
+      if (lowerM1 === upperR && upperM !== upperR) {
         newRanges.push([upperM + 1, lowerM1]);
       }
     }
+
     //maps at the upper range limit
     else if (lowerM >= lowerR && lowerM <= upperR && upperM > upperR) {
       if (i === 0 && lowerR !== lowerM) {
@@ -62,6 +70,7 @@ const mapRange = (range, maps) => {
       newRanges.push([lowerM + conversion, upperR + conversion]);
     }
   }
+
   // maps not in range
   if (newRanges.length === 0) {
     newRanges.push([lowerR, upperR]);
@@ -84,6 +93,25 @@ const lightToTempR = convertF("light", "temperature", convertRanges);
 const tempToHumidityR = convertF("temperature", "humidity", convertRanges);
 const humidityToLocationR = convertF("humidity", "location", convertRanges);
 
+const getLocationR = (data) => {
+  const seedR = setNewSeed(data);
+  const soilR = seedToSoilR(seedR);
+  const fertR = soilToFertR(soilR);
+  const waterR = fertToWaterR(fertR);
+  const lightR = waterToLightR(waterR);
+  const tempR = lightToTempR(lightR);
+  const humidityR = tempToHumidityR(tempR);
+  const locationR = humidityToLocationR(humidityR);
+  return locationR.location;
+};
+
+const part2Answer = (data) => {
+  const locationR = getLocationR(data);
+  const locationMin = locationR.map(([min]) => {
+    return min;
+  });
+  return findMin(locationMin);
+};
 module.exports = {
   setNewSeed,
   mapRange,
@@ -95,4 +123,6 @@ module.exports = {
   lightToTempR,
   tempToHumidityR,
   humidityToLocationR,
+  getLocationR,
+  part2Answer,
 };

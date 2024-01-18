@@ -36,6 +36,8 @@ const {
   waterToLightR,
   lightToTempR,
   tempToHumidityR,
+  humidityToLocationR,
+  part2Answer,
 } = require("../part2");
 describe("txtToJSON.js", () => {
   describe("getMapRegex()", () => {
@@ -433,7 +435,7 @@ describe("part2.js", () => {
       expect(data).toEqual(copyData);
     });
   });
-  describe.only("mapRanges()", () => {
+  describe("mapRanges()", () => {
     describe("checks single map against range, and produces new ranges", () => {
       describe("mapping converts the entire range", () => {
         test("map covers the exact range", () => {
@@ -529,7 +531,7 @@ describe("part2.js", () => {
 
             const newRange = [
               [79, 91],
-              [92, 92],
+              [50, 50],
             ];
             expect(mapRange(range, map)).toEqual(newRange);
           });
@@ -562,7 +564,7 @@ describe("part2.js", () => {
             ];
             expect(mapRange(range, map)).toEqual(newRange);
           });
-          test("map part of the range at the lower limit, edge case: map ends at the start of a range", () => {
+          test("edge case: map ends at the start of a range", () => {
             const range = [79, 92];
 
             const map = [["50", "70", "10"]];
@@ -586,10 +588,9 @@ describe("part2.js", () => {
           test("edge case: map starts at the beginning of a range, ends greater than the end of the range", () => {
             const range = [79, 92];
             const map = [["50", "79", "15"]];
-            const newRange = [[51, 64]];
+            const newRange = [[50, 63]];
             expect(mapRange(range, map)).toEqual(newRange);
           });
-
           test("edge case: map ends at the end of a range", () => {
             const range = [79, 92];
             const map = [["50", "78", "15"]];
@@ -622,7 +623,7 @@ describe("part2.js", () => {
         ];
         expect(mapRange(range, map)).toEqual(newRange);
       });
-      test(" map not in range, with other maps in range", () => {
+      test("map not in range, with other maps in range", () => {
         const range = [10, 20];
         const map = [
           [100, 0, 4],
@@ -645,7 +646,7 @@ describe("part2.js", () => {
         const newRange = [
           [1010, 1011],
           [12, 14],
-          [10015, 100018],
+          [10015, 10018],
           [19, 20],
         ];
         expect(mapRange(range, map)).toEqual(newRange);
@@ -654,7 +655,7 @@ describe("part2.js", () => {
         const range = [10, 20];
         const map = [
           [1008, 8, 4],
-          [1012, 12, 4],
+          [10012, 12, 4],
         ];
 
         const newRange = [
@@ -943,11 +944,12 @@ describe("part2.js", () => {
       );
     });
     test("humidity-to-location", () => {
-      const updatedWithLocation = {
-        ...testDataWithHumidity,
+      const updatedWithLocationR = {
+        ...testDataWithHumidityR,
         location: [
           [82, 84],
-          [46, 56],
+          [46, 55],
+          [60, 60],
           [86, 89],
           [94, 96],
           [56, 59],
@@ -957,6 +959,9 @@ describe("part2.js", () => {
       expect(humidityToLocationR(testDataWithHumidityR)).toEqual(
         updatedWithLocationR
       );
+    });
+    test("part2Answer()", () => {
+      expect(part2Answer(testData)).toBe(46);
     });
   });
 });
