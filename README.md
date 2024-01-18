@@ -2,6 +2,8 @@
 
 ## About
 
+This is a collection of the code that I used to complete the [advent of code](https://adventofcode.com/2023/about) challenges.
+
 ## Contents
 
 - [Day-1 Trebuchet?!](#day-1-trebuchet)
