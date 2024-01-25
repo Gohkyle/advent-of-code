@@ -2,6 +2,8 @@ const { getData, formatData, getTxtToJSON } = require("../data/txtToJSON");
 
 const mock = require("mock-fs");
 const fs = require("fs");
+const { calcWins, part1Answer } = require("../part1");
+const testData = require("../data/test-input.json");
 
 describe("txtToJSON", () => {
   describe("getData()", () => {
@@ -99,6 +101,32 @@ describe("txtToJSON", () => {
         const fileJSON = fs.readFileSync(`${filePath}.json`, "utf-8");
         console.log(fileJSON);
         expect(fileJSON).toEqual(expectedJSON);
+      });
+    });
+  });
+});
+describe("part1", () => {
+  describe("calcWins()", () => {
+    describe("takes a time number and distance number, and returns the number of possible ways to win", () => {
+      test("test scenario 1", () => {
+        const time = 7;
+        const distance = 9;
+        expect(calcWins(time, distance)).toBe(4);
+      });
+      test("test scenario 1", () => {
+        const time = 15;
+        const distance = 40;
+        expect(calcWins(time, distance)).toBe(8);
+      });
+      test("test scenario 1", () => {
+        const time = 30;
+        const distance = 200;
+        expect(calcWins(time, distance)).toBe(9);
+      });
+    });
+    describe("part1Answer()", () => {
+      test("function returns the product of the win situations from each race", () => {
+        expect(part1Answer(testData)).toBe(288);
       });
     });
   });
