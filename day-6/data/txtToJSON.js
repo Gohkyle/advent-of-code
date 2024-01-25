@@ -11,6 +11,11 @@ const formatData = (times, distances) => {
     return { time, distance };
   });
 };
+
+const concatData = (array) => {
+  return +array.toString().replaceAll(",", "");
+};
+
 const getTxtToJSON = (file) => {
   return fs
     .readFile(`${file}.txt`, "utf-8")
@@ -23,5 +28,26 @@ const getTxtToJSON = (file) => {
       return fs.writeFile(`${file}.json`, JSON.stringify(data), "utf-8");
     });
 };
+const getTxtToJSON2 = (file) => {
+  return fs
+    .readFile(`${file}.txt`, "utf-8")
+    .then((txt) => {
+      const times = getData(txt, "Time");
+      const distances = getData(txt, "Distance");
 
-module.exports = { getData, formatData, getTxtToJSON };
+      const time = concatData(times);
+      const distance = concatData(distances);
+      return { time, distance };
+    })
+    .then((data) => {
+      return fs.writeFile(`${file}2.json`, JSON.stringify(data), "utf-8");
+    });
+};
+
+module.exports = {
+  getData,
+  formatData,
+  getTxtToJSON,
+  concatData,
+  getTxtToJSON2,
+};
