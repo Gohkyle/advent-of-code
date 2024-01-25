@@ -1,9 +1,16 @@
-const { getData, formatData, getTxtToJSON } = require("../data/txtToJSON");
+const {
+  getData,
+  formatData,
+  getTxtToJSON,
+  concatData,
+  getTxtToJSON2,
+} = require("../data/txtToJSON");
 
 const mock = require("mock-fs");
 const fs = require("fs");
 const { calcWins, part1Answer } = require("../part1");
 const testData = require("../data/test-input.json");
+const { calcWins2 } = require("../part2");
 
 describe("txtToJSON", () => {
   describe("getData()", () => {
@@ -99,7 +106,52 @@ describe("txtToJSON", () => {
 
       return getTxtToJSON(filePath).then(() => {
         const fileJSON = fs.readFileSync(`${filePath}.json`, "utf-8");
-        console.log(fileJSON);
+        expect(fileJSON).toEqual(expectedJSON);
+      });
+    });
+  });
+  describe("concatData()", () => {
+    test("takes an array, and returns a number", () => {
+      const times = [1, 2, 3];
+
+      expect(typeof concatData(times)).toBe("number");
+    });
+    test("takes an array, and return one long string of the array values concatenated", () => {
+      const times = [1, 2, 3];
+      const time = 123;
+
+      expect(concatData(times)).toBe(time);
+    });
+  });
+  describe("getTxtToJSON2()", () => {
+    beforeAll(() => {
+      mock({
+        folderName: {
+          "test-input.txt": `Time:   1 2 3
+          Distance: 1 2 3`,
+        },
+      });
+    });
+
+    afterAll(() => {
+      mock.restore();
+    });
+
+    const filePath = `${process.cwd()}/folderName/test-input`;
+
+    test("new file is created with suffix.JSON", () => {
+      const expectedFolder = ["test-input.txt", "test-input2.json"];
+
+      return getTxtToJSON2(filePath).then(() => {
+        const folder = fs.readdirSync(`${process.cwd()}/folderName`);
+        expect(folder).toEqual(expectedFolder);
+      });
+    });
+    test("file contains the correct structure", () => {
+      const expectedJSON = JSON.stringify({ time: 123, distance: 123 });
+
+      return getTxtToJSON2(filePath).then(() => {
+        const fileJSON = fs.readFileSync(`${filePath}2.json`, "utf-8");
         expect(fileJSON).toEqual(expectedJSON);
       });
     });
@@ -128,6 +180,19 @@ describe("part1", () => {
       test("function returns the product of the win situations from each race", () => {
         expect(part1Answer(testData)).toBe(288);
       });
+    });
+  });
+});
+describe("part2", () => {
+  describe("calcWins2", () => {
+    beforeAll(() => {
+      getTxtToJSON2(`${__dirname}/../data/test-input`);
+    });
+
+    test("takes all the ", () => {
+      const time = 71530;
+      const distance = 940200;
+      expect(calcWins2(time, distance)).toBe(71503);
     });
   });
 });
