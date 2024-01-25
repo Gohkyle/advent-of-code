@@ -1,8 +1,11 @@
+const travelled = (x, time) => {
+  return x * (time - x);
+};
+
 const calcWins = (time, distance) => {
   let wins = 0;
   for (let x = 0; x <= time; x++) {
-    const travelled = x * (time - x);
-    if (travelled > distance) {
+    if (travelled(x, time) > distance) {
       wins++;
     }
   }
@@ -14,4 +17,4 @@ const part1Answer = (data) => {
     return (acc *= calcWins(time, distance));
   }, 1);
 };
-module.exports = { calcWins, part1Answer };
+module.exports = { calcWins, part1Answer, travelled };
