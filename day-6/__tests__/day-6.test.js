@@ -1,6 +1,7 @@
-const { getData } = require("../data/txtToJSON");
+const { getData, formatData, getTxtToJSON } = require("../data/txtToJSON");
 
 const mock = require("mock-fs");
+const fs = require("fs");
 
 describe("txtToJSON", () => {
   describe("getData()", () => {
@@ -43,12 +44,32 @@ describe("txtToJSON", () => {
 
       expect(formatData(timeArr, distanceArr)).toEqual(resultArr);
     });
+    test("returns a new array", () => {
+      const timeArr = [1, 2, 3];
+      const distanceArr = [9, 8, 7];
+
+      expect(formatData(timeArr, distanceArr)).not.toEqual(timeArr);
+      expect(formatData(timeArr, distanceArr)).not.toEqual(distanceArr);
+    });
+    test("original arrays are not mutated", () => {
+      const timeArr = [1, 2, 3];
+      const copyTimeArr = [1, 2, 3];
+
+      const distanceArr = [9, 8, 7];
+      const copyDistanceArr = [9, 8, 7];
+
+      formatData(timeArr, distanceArr);
+
+      expect(timeArr).toEqual(copyTimeArr);
+      expect(distanceArr).toEqual(copyDistanceArr);
+    });
   });
   describe("getTxtToJson()", () => {
     beforeAll(() => {
       mock({
         folderName: {
-          "test-input.txt": `Time:   1 2 3\\nDistance: 1 2 3`,
+          "test-input.txt": `Time:   1 2 3
+          Distance: 1 2 3`,
         },
       });
     });
@@ -57,7 +78,28 @@ describe("txtToJSON", () => {
       mock.restore();
     });
 
-    test("new file is created with suffix.JSON", () => {});
-    test("returns an array of objects with properties Time and Distance", () => {});
+    const filePath = `${process.cwd()}/folderName/test-input`;
+
+    test("new file is created with suffix.JSON", () => {
+      const expectedFolder = ["test-input.json", "test-input.txt"];
+
+      return getTxtToJSON(filePath).then(() => {
+        const folder = fs.readdirSync(`${process.cwd()}/folderName`);
+        expect(folder).toEqual(expectedFolder);
+      });
+    });
+    test("file contains the correct structure", () => {
+      const expectedJSON = JSON.stringify([
+        { time: 1, distance: 1 },
+        { time: 2, distance: 2 },
+        { time: 3, distance: 3 },
+      ]);
+
+      return getTxtToJSON(filePath).then(() => {
+        const fileJSON = fs.readFileSync(`${filePath}.json`, "utf-8");
+        console.log(fileJSON);
+        expect(fileJSON).toEqual(expectedJSON);
+      });
+    });
   });
 });
