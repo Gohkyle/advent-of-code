@@ -91,7 +91,7 @@ describe("txtToJSON.js", () => {
     });
   });
   describe("formatData()", () => {
-    test("takes a string, returns rach map on the key of maptypes", () => {
+    test("takes a string, returns each map on the key of maptypes", () => {
       const testInputTxt = `seeds: 79 14 55 13\n\nseed-to-soil map:\n50 98 2\n52 50 48\n\nsoil-to-fertilizer map:\n0 15 37\n37 52 2\n39 0 15`;
       const mapTypes = {
         "seed-to-soil": [
