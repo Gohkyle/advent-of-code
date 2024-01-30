@@ -1,5 +1,10 @@
 const { txtToArr } = require("../data/txtToJSON");
-const { findFiveOfAKind, findFourOfAKind } = require("../part1");
+const {
+  findFiveOfAKind,
+  findFourOfAKind,
+  findFullHouse,
+  createFHRegex,
+} = require("../part1");
 
 describe("txtToJSON", () => {
   describe("txtToArr()", () => {
@@ -147,9 +152,13 @@ describe("part1", () => {
         const hands = [
           { hand: "KKK22", bid: 0 },
           { hand: "22KKK", bid: 0 },
+          { hand: "2345K", bid: 0 },
         ];
-        const fullHouses = [{ hand: "KKKK2", bid: 0 }];
-        expect(findFourOfAKind(hands)).toEqual(fullHouses);
+        const fullHouses = [
+          { hand: "KKK22", bid: 0 },
+          { hand: "22KKK", bid: 0 },
+        ];
+        expect(findFullHouse(hands)).toEqual(fullHouses);
       });
       test("detects non consecutive cards in a hand", () => {
         const hands = [
@@ -173,25 +182,25 @@ describe("part1", () => {
           { hand: "2KK2K", bid: 0 },
           { hand: "2KKK2", bid: 0 },
         ];
-        expect(findFourOfAKind(hands)).toEqual(fourOfAKinds);
+        expect(findFullHouse(hands)).toEqual(fourOfAKinds);
       });
       test("does not detect five of a kind", () => {
         const hands = [{ hand: "QQQQQ", bid: 0 }];
         const fourOfAKinds = [];
 
-        expect(findFourOfAKind(hands)).toEqual(fourOfAKinds);
+        expect(findFullHouse(hands)).toEqual(fourOfAKinds);
       });
       test("does not detect four of a kind", () => {
         const hands = [{ hand: "QQQQ2", bid: 0 }];
         const fourOfAKinds = [];
 
-        expect(findFourOfAKind(hands)).toEqual(fourOfAKinds);
+        expect(findFullHouse(hands)).toEqual(fourOfAKinds);
       });
     });
     test("does not detect three of a kind", () => {
       const hands = [
         { hand: "K22KK", bid: 0 },
-        { hand: "KK12K", bid: 0 },
+        { hand: "KK32K", bid: 0 },
       ];
       const fullHouses = [{ hand: "K22KK", bid: 0 }];
       expect(findFullHouse(hands)).toEqual(fullHouses);
@@ -199,7 +208,7 @@ describe("part1", () => {
     test("detects other labels", () => {
       const hands = [
         { hand: "A22AA", bid: 0 },
-        { hand: "KK12K", bid: 0 },
+        { hand: "KK32K", bid: 0 },
       ];
       const fullHouses = [{ hand: "A22AA", bid: 0 }];
       expect(findFullHouse(hands)).toEqual(fullHouses);
@@ -224,6 +233,15 @@ describe("part1", () => {
 
       findFullHouse(hands);
       expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("createFullHouseRegex()", () => {
+    test("takes a card label, returns the regex capture group that returns any full house associated with three of tha given label", () => {
+      const KKKXX = `(?=.*((.*A){2}|(.*Q){2}|(.*J){2}|(.*T){2}|(.*9){2}|(.*8){2}|(.*7){2}|(.*6){2}|(.*5){2}|(.*4){2}|(.*3){2}|(.*2){2}))(.*K){3}`;
+      const TTTXX = `(?=.*((.*A){2}|(.*K){2}|(.*Q){2}|(.*J){2}|(.*9){2}|(.*8){2}|(.*7){2}|(.*6){2}|(.*5){2}|(.*4){2}|(.*3){2}|(.*2){2}))(.*T){3}`;
+
+      expect(createFHRegex("K")).toBe(KKKXX);
+      expect(createFHRegex("T")).toBe(TTTXX);
     });
   });
 });
