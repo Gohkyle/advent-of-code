@@ -19,7 +19,7 @@ const labels = [
   "3",
   "2",
 ];
-const fullHouseRegex = () => {
+const containFHRegex = (positive) => {
   let regex = ``;
   labels.forEach((label, index) => {
     regex += `(${createFHRegex(label)})`;
@@ -27,7 +27,7 @@ const fullHouseRegex = () => {
       regex += `|`;
     }
   });
-  return `(?=.*${regex})`;
+  return `(?${positive ? `=` : `!`}.*${regex})`;
 };
 
 const findHandType = () => {};
@@ -51,7 +51,7 @@ const findFourOfAKind = (hands) => {
 
 const findFullHouse = (hands) => {
   const regex = new RegExp(
-    `^${fullHouseRegex()}${notContainFour}[AKQJT98765432]{5}$`,
+    `^${containFHRegex(true)}${notContainFour}[AKQJT98765432]{5}$`,
     "m"
   );
   return hands.filter(({ hand }) => {
@@ -70,11 +70,17 @@ const createFHRegex = (l0) => {
 };
 
 const findThreeOfAKind = (hands) => {
-  const regex = `^()`;
+  const regex = new RegExp(
+    `^${containFHRegex(
+      false
+    )}${containThree}${notContainFour}[AKQJT98765432]{5}$`
+  );
   return hands.filter(({ hand }) => {
     return regex.test(hand);
   });
 };
+
+const findTwoPair = () => {};
 module.exports = {
   findFiveOfAKind,
   findFourOfAKind,

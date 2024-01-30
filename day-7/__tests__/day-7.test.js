@@ -301,8 +301,8 @@ describe("part1", () => {
         { hand: "K22KK", bid: 0 },
         { hand: "KK32K", bid: 0 },
       ];
-      const fullHouses = [{ hand: "KK32K", bid: 0 }];
-      expect(findFullHouse(hands)).toEqual(fullHouses);
+      const threeOfAKinds = [{ hand: "KK32K", bid: 0 }];
+      expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
     });
     test("detects other labels", () => {
       const hands = [
