@@ -5,20 +5,21 @@ const notContainFour = `(?!.*((.*A){4}|(.*K){4})|(.*Q){4}|(.*J){4}|(.*T){4}|(.*9
 const containThree = `(?=.*((.*A){3}|(.*K){3}|(.*Q){3}|(.*J){3}|(.*T){3}|(.*9){3}|(.*8){3}|(.*7){3}|(.*6){3}|(.*5){3}|(.*4){3}|(.*3){3}|(.*2){3}))`;
 const notContainThree = `(?!.*((.*A){3}|(.*K){3}|(.*Q){3}|(.*J){3}|(.*T){3}|(.*9){3}|(.*8){3}|(.*7){3}|(.*6){3}|(.*5){3}|(.*4){3}|(.*3){3}|(.*2){3}))`;
 const containTwo = `(?=.*((.*A){2}|(.*K){2}|(.*Q){2}|(.*J){2}|(.*T){2}|(.*9){2}|(.*8){2}|(.*7){2}|(.*6){2}|(.*5){2}|(.*4){2}|(.*3){2}|(.*2){2}))`;
+const notContainTwo = `(?!.*((.*A){2}|(.*K){2}|(.*Q){2}|(.*J){2}|(.*T){2}|(.*9){2}|(.*8){2}|(.*7){2}|(.*6){2}|(.*5){2}|(.*4){2}|(.*3){2}|(.*2){2}))`;
 const labels = [
-  "A",
-  "K",
-  "Q",
-  "J",
-  "T",
-  "9",
-  "8",
-  "7",
-  "6",
-  "5",
-  "4",
-  "3",
   "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "T",
+  "J",
+  "Q",
+  "K",
+  "A",
 ];
 const containFHRegex = (positive) => {
   let regex = ``;
@@ -120,7 +121,17 @@ const findOnePair = (hands) => {
 };
 
 const findHighCard = (hands) => {
-  return;
+  const regex = new RegExp(
+    `^${containTPRegex(false)}${notContainTwo}[AKQJT98765432]{5}$`
+  );
+  return hands.filter(({ hand }) => {
+    return regex.test(hand);
+  });
+};
+
+const sortHands = (hands) => {
+  const compareFn = ({ hand }) => {};
+  hands.sort();
 };
 module.exports = {
   findFiveOfAKind,
@@ -130,4 +141,6 @@ module.exports = {
   findThreeOfAKind,
   findTwoPair,
   findOnePair,
+  findHighCard,
+  sortHands,
 };

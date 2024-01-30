@@ -8,6 +8,7 @@ const {
   findTwoPair,
   findOnePair,
   findHighCard,
+  sortHands,
 } = require("../part1");
 
 describe("txtToJSON", () => {
@@ -588,7 +589,7 @@ describe("part1", () => {
         { hand: "223Q2", bid: 0 },
         { hand: "22332", bid: 0 },
       ];
-      expect(findHighCard(hands)).not.toEqual(highCards);
+      expect(findHighCard(hands)).not.toEqual(hands);
     });
     test("original array is not mutated", () => {
       const hands = [
@@ -603,6 +604,22 @@ describe("part1", () => {
       ];
       findHighCard(hands);
       expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("sortHands()", () => {
+    test("hands are sorted through their labels from 2 to A", () => {
+      const hands = [
+        { hand: "KKKKK", bid: 0 },
+        { hand: "22222", bid: 0 },
+        { hand: "TTTTT", bid: 0 },
+      ];
+
+      const sortedHands = [
+        { hand: "22222", bid: 0 },
+        { hand: "TTTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(sortHands(hands)).toEqual(sortedHands);
     });
   });
 });
