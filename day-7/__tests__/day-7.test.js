@@ -5,6 +5,9 @@ const {
   findFullHouse,
   createFHRegex,
   findThreeOfAKind,
+  findTwoPair,
+  findOnePair,
+  findHighCard,
 } = require("../part1");
 
 describe("txtToJSON", () => {
@@ -295,22 +298,22 @@ describe("part1", () => {
 
         expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
       });
-    });
-    test("does not detect full houses", () => {
-      const hands = [
-        { hand: "K22KK", bid: 0 },
-        { hand: "KK32K", bid: 0 },
-      ];
-      const threeOfAKinds = [{ hand: "KK32K", bid: 0 }];
-      expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
-    });
-    test("detects other labels", () => {
-      const hands = [
-        { hand: "A24AA", bid: 0 },
-        { hand: "KK33K", bid: 0 },
-      ];
-      const threeOfAKinds = [{ hand: "A24AA", bid: 0 }];
-      expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      test("does not detect full houses", () => {
+        const hands = [
+          { hand: "K22KK", bid: 0 },
+          { hand: "KK32K", bid: 0 },
+        ];
+        const threeOfAKinds = [{ hand: "KK32K", bid: 0 }];
+        expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      });
+      test("detects other labels", () => {
+        const hands = [
+          { hand: "A24AA", bid: 0 },
+          { hand: "KK33K", bid: 0 },
+        ];
+        const threeOfAKinds = [{ hand: "A24AA", bid: 0 }];
+        expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      });
     });
     test("returns a new array", () => {
       const hands = [
@@ -331,6 +334,274 @@ describe("part1", () => {
       ];
 
       findThreeOfAKind(hands);
+      expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("findTwoPairs()", () => {
+    describe("takes an array of hands and returns all the two pairs", () => {
+      test("detects 2 in a row", () => {
+        const hands = [
+          { hand: "KKAA2", bid: 0 },
+          { hand: "AA5KK", bid: 0 },
+          { hand: "2345K", bid: 0 },
+        ];
+        const twoPairs = [
+          { hand: "KKAA2", bid: 0 },
+          { hand: "AA5KK", bid: 0 },
+        ];
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+      test("detects non consecutive cards in a hand", () => {
+        const hands = [
+          { hand: "KA5AK", bid: 0 },
+          { hand: "K5AAK", bid: 0 },
+          { hand: "KAA5K", bid: 0 },
+          { hand: "KA5KA", bid: 0 },
+          { hand: "KAAK5", bid: 0 },
+          { hand: "K5AKA", bid: 0 },
+          { hand: "KAKA5", bid: 0 },
+          { hand: "KAK5A", bid: 0 },
+          { hand: "K5KAA", bid: 0 },
+          { hand: "KK5AA", bid: 0 },
+          { hand: "KKA5A", bid: 0 },
+          { hand: "KKK5A", bid: 0 },
+        ];
+        const twoPairs = [
+          { hand: "KA5AK", bid: 0 },
+          { hand: "K5AAK", bid: 0 },
+          { hand: "KAA5K", bid: 0 },
+          { hand: "KA5KA", bid: 0 },
+          { hand: "KAAK5", bid: 0 },
+          { hand: "K5AKA", bid: 0 },
+          { hand: "KAKA5", bid: 0 },
+          { hand: "KAK5A", bid: 0 },
+          { hand: "K5KAA", bid: 0 },
+          { hand: "KK5AA", bid: 0 },
+          { hand: "KKA5A", bid: 0 },
+        ];
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+      test("does not detect five of a kind", () => {
+        const hands = [{ hand: "QQQQQ", bid: 0 }];
+        const twoPairs = [];
+
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+      test("does not detect four of a kind", () => {
+        const hands = [{ hand: "QQQQ2", bid: 0 }];
+        const twoPairs = [];
+
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+      test("does not detect full houses", () => {
+        const hands = [{ hand: "QQQ22", bid: 0 }];
+        const twoPairs = [];
+
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+      test("does not detect one pair", () => {
+        const hands = [{ hand: "Q4522", bid: 0 }];
+        const twoPairs = [];
+
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+      test("detects other labels", () => {
+        const hands = [
+          { hand: "A2233", bid: 0 },
+          { hand: "JJ33K", bid: 0 },
+        ];
+        const twoPairs = [
+          { hand: "A2233", bid: 0 },
+          { hand: "JJ33K", bid: 0 },
+        ];
+        expect(findTwoPair(hands)).toEqual(twoPairs);
+      });
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "QQ223", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+
+      expect(findTwoPair(hands)).not.toEqual(hands);
+    });
+    test("original array is not mutated", () => {
+      const hands = [
+        { hand: "QQ223", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+      const copyHands = [
+        { hand: "QQ223", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+
+      findTwoPair(hands);
+      expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("findOnePair()", () => {
+    describe("takes an array of hands and returns all the two pairs", () => {
+      test("detects 2 in a row", () => {
+        const hands = [
+          { hand: "KKA32", bid: 0 },
+          { hand: "A25KK", bid: 0 },
+          { hand: "23345", bid: 0 },
+          { hand: "23145", bid: 0 },
+        ];
+        const onePairs = [
+          { hand: "KKA32", bid: 0 },
+          { hand: "A25KK", bid: 0 },
+          { hand: "23345", bid: 0 },
+        ];
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+      test("detects non consecutive cards in a hand", () => {
+        const hands = [
+          { hand: "KA5AK", bid: 0 },
+          { hand: "K5AAK", bid: 0 },
+          { hand: "KAA5K", bid: 0 },
+          { hand: "KA5KA", bid: 0 },
+          { hand: "K245K", bid: 0 },
+          { hand: "5K24K", bid: 0 },
+          { hand: "K2K45", bid: 0 },
+          { hand: "45K2K", bid: 0 },
+          { hand: "5K2K4", bid: 0 },
+          { hand: "KAAK5", bid: 0 },
+          { hand: "K5AKA", bid: 0 },
+          { hand: "KAKA5", bid: 0 },
+        ];
+        const onePairs = [
+          { hand: "K245K", bid: 0 },
+          { hand: "5K24K", bid: 0 },
+          { hand: "K2K45", bid: 0 },
+          { hand: "45K2K", bid: 0 },
+          { hand: "5K2K4", bid: 0 },
+        ];
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+      test("does not detect five of a kind", () => {
+        const hands = [{ hand: "QQQQQ", bid: 0 }];
+        const onePairs = [];
+
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+      test("does not detect four of a kind", () => {
+        const hands = [{ hand: "QQQQ2", bid: 0 }];
+        const onePairs = [];
+
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+      test("does not detect full houses", () => {
+        const hands = [{ hand: "QQQ22", bid: 0 }];
+        const onePairs = [];
+
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+      test("does not detect two pair", () => {
+        const hands = [{ hand: "QQ522", bid: 0 }];
+        const onePairs = [];
+
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+      test("detects other labels", () => {
+        const hands = [
+          { hand: "A4233", bid: 0 },
+          { hand: "JJ37K", bid: 0 },
+        ];
+        const onePairs = [
+          { hand: "A4233", bid: 0 },
+          { hand: "JJ37K", bid: 0 },
+        ];
+        expect(findOnePair(hands)).toEqual(onePairs);
+      });
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "99223", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+
+      expect(findOnePair(hands)).not.toEqual(hands);
+    });
+    test("original array is not mutated", () => {
+      const hands = [
+        { hand: "Q9223", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+      const copyHands = [
+        { hand: "Q9223", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+
+      findOnePair(hands);
+      expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("findHighCard()", () => {
+    describe("takes an array of hands and returns only high card hands", () => {
+      test("returns high cards only", () => {
+        const hands = [
+          { hand: "23456", bid: 0 },
+          { hand: "22345", bid: 0 },
+        ];
+        const highCards = [{ hand: "23456", bid: 0 }];
+        expect(findHighCard(hands)).toEqual(highCards);
+      });
+      test("does not detect five of a kind", () => {
+        const hands = [
+          { hand: "23456", bid: 0 },
+          { hand: "22222", bid: 0 },
+        ];
+        const highCards = [{ hand: "23456", bid: 0 }];
+        expect(findHighCard(hands)).toEqual(highCards);
+      });
+      test("does not detect four of a kind", () => {
+        const hands = [
+          { hand: "23456", bid: 0 },
+          { hand: "222Q2", bid: 0 },
+        ];
+        const highCards = [{ hand: "23456", bid: 0 }];
+        expect(findHighCard(hands)).toEqual(highCards);
+      });
+      test("does not detect three of a kind/full houses", () => {
+        const hands = [
+          { hand: "23456", bid: 0 },
+          { hand: "223Q2", bid: 0 },
+          { hand: "22332", bid: 0 },
+        ];
+        const highCards = [{ hand: "23456", bid: 0 }];
+        expect(findHighCard(hands)).toEqual(highCards);
+      });
+      test("does not detect two pair or one pair", () => {
+        const hands = [
+          { hand: "23456", bid: 0 },
+          { hand: "223Q2", bid: 0 },
+          { hand: "22332", bid: 0 },
+        ];
+        const highCards = [{ hand: "23456", bid: 0 }];
+        expect(findHighCard(hands)).toEqual(highCards);
+      });
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "23456", bid: 0 },
+        { hand: "223Q2", bid: 0 },
+        { hand: "22332", bid: 0 },
+      ];
+      expect(findHighCard(hands)).not.toEqual(highCards);
+    });
+    test("original array is not mutated", () => {
+      const hands = [
+        { hand: "23456", bid: 0 },
+        { hand: "223Q2", bid: 0 },
+        { hand: "22332", bid: 0 },
+      ];
+      const copyHands = [
+        { hand: "23456", bid: 0 },
+        { hand: "223Q2", bid: 0 },
+        { hand: "22332", bid: 0 },
+      ];
+      findHighCard(hands);
       expect(hands).toEqual(copyHands);
     });
   });
