@@ -4,6 +4,7 @@ const {
   findFourOfAKind,
   findFullHouse,
   createFHRegex,
+  findThreeOfAKind,
 } = require("../part1");
 
 describe("txtToJSON", () => {
@@ -216,7 +217,7 @@ describe("part1", () => {
     test("returns a new array", () => {
       const hands = [
         { hand: "QQQQQ", bid: 0 },
-        { hand: "QQQ1Q", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
       ];
 
       expect(findFullHouse(hands)).not.toEqual(hands);
@@ -224,11 +225,11 @@ describe("part1", () => {
     test("original array is not mutated", () => {
       const hands = [
         { hand: "QQQQQ", bid: 0 },
-        { hand: "QQQ1Q", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
       ];
       const copyHands = [
         { hand: "QQQQQ", bid: 0 },
-        { hand: "QQQ1Q", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
       ];
 
       findFullHouse(hands);
@@ -242,6 +243,95 @@ describe("part1", () => {
 
       expect(createFHRegex("K")).toBe(KKKXX);
       expect(createFHRegex("T")).toBe(TTTXX);
+    });
+  });
+  describe("findThreeOfAKind()", () => {
+    describe("takes an array of hands and returns all the three of a kinds", () => {
+      test("detects 3 in a row", () => {
+        const hands = [
+          { hand: "KKK42", bid: 0 },
+          { hand: "42KKK", bid: 0 },
+          { hand: "2345K", bid: 0 },
+        ];
+        const threeOfAKinds = [
+          { hand: "KKK42", bid: 0 },
+          { hand: "42KKK", bid: 0 },
+        ];
+        expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      });
+      test("detects non consecutive cards in a hand", () => {
+        const hands = [
+          { hand: "K24KK", bid: 0 },
+          { hand: "KK24K", bid: 0 },
+          { hand: "K2K4K", bid: 0 },
+          { hand: "KK2K4", bid: 0 },
+          { hand: "K2KK4", bid: 0 },
+          { hand: "2K4KK", bid: 0 },
+          { hand: "2KK4K", bid: 0 },
+          { hand: "2KKK4", bid: 0 },
+          { hand: "K2345", bid: 0 },
+        ];
+        const threeOfAKinds = [
+          { hand: "K24KK", bid: 0 },
+          { hand: "KK24K", bid: 0 },
+          { hand: "K2K4K", bid: 0 },
+          { hand: "KK2K4", bid: 0 },
+          { hand: "K2KK4", bid: 0 },
+          { hand: "2K4KK", bid: 0 },
+          { hand: "2KK4K", bid: 0 },
+          { hand: "2KKK4", bid: 0 },
+        ];
+        expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      });
+      test("does not detect five of a kind", () => {
+        const hands = [{ hand: "QQQQQ", bid: 0 }];
+        const threeOfAKinds = [];
+
+        expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      });
+      test("does not detect four of a kind", () => {
+        const hands = [{ hand: "QQQQ2", bid: 0 }];
+        const threeOfAKinds = [];
+
+        expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+      });
+    });
+    test("does not detect full houses", () => {
+      const hands = [
+        { hand: "K22KK", bid: 0 },
+        { hand: "KK32K", bid: 0 },
+      ];
+      const fullHouses = [{ hand: "KK32K", bid: 0 }];
+      expect(findFullHouse(hands)).toEqual(fullHouses);
+    });
+    test("detects other labels", () => {
+      const hands = [
+        { hand: "A24AA", bid: 0 },
+        { hand: "KK33K", bid: 0 },
+      ];
+      const threeOfAKinds = [{ hand: "A24AA", bid: 0 }];
+      expect(findThreeOfAKind(hands)).toEqual(threeOfAKinds);
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "QQQ23", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+
+      expect(findThreeOfAKind(hands)).not.toEqual(hands);
+    });
+    test("original array is not mutated", () => {
+      const hands = [
+        { hand: "QQQ23", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+      const copyHands = [
+        { hand: "QQQ23", bid: 0 },
+        { hand: "QQQ2Q", bid: 0 },
+      ];
+
+      findThreeOfAKind(hands);
+      expect(hands).toEqual(copyHands);
     });
   });
 });
