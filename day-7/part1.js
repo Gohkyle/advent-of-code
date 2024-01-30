@@ -22,12 +22,12 @@ const labels = [
 const fullHouseRegex = () => {
   let regex = ``;
   labels.forEach((label, index) => {
-    fullHouseRegex += `(${createFHRegex(label)})`;
+    regex += `(${createFHRegex(label)})`;
     if (index !== labels.length - 1) {
-      fullHouseRegex += `|`;
+      regex += `|`;
     }
   });
-  return regex;
+  return `(?=.*${regex})`;
 };
 
 const findHandType = () => {};
@@ -50,16 +50,8 @@ const findFourOfAKind = (hands) => {
 };
 
 const findFullHouse = (hands) => {
-  let fullHouseRegex = ``;
-  labels.forEach((label, index) => {
-    fullHouseRegex += `(${createFHRegex(label)})`;
-    if (index !== labels.length - 1) {
-      fullHouseRegex += `|`;
-    }
-  });
-
   const regex = new RegExp(
-    `^(?=.*${fullHouseRegex()})${notContainFour}[AKQJT98765432]{5}$`,
+    `^${fullHouseRegex()}${notContainFour}[AKQJT98765432]{5}$`,
     "m"
   );
   return hands.filter(({ hand }) => {
@@ -71,15 +63,18 @@ const createFHRegex = (l0) => {
   const disposableLabels = [...labels];
 
   const start = labels.indexOf(l0);
-
   disposableLabels.splice(start, 1);
 
   const [l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12] = disposableLabels;
-
   return `(?=.*((.*${l1}){2}|(.*${l2}){2}|(.*${l3}){2}|(.*${l4}){2}|(.*${l5}){2}|(.*${l6}){2}|(.*${l7}){2}|(.*${l8}){2}|(.*${l9}){2}|(.*${l10}){2}|(.*${l11}){2}|(.*${l12}){2}))(.*${l0}){3}`;
 };
 
-const findThreeOfAKind = () => {};
+const findThreeOfAKind = (hands) => {
+  const regex = `^()`;
+  return hands.filter(({ hand }) => {
+    return regex.test(hand);
+  });
+};
 module.exports = {
   findFiveOfAKind,
   findFourOfAKind,
