@@ -21,6 +21,7 @@ const {
   findTwoPair,
   findOnePair,
   findHighCard,
+  sumWinning,
 } = require("./part1");
 
 const newLabels = [
@@ -102,9 +103,15 @@ const promoteAndSortHands = (hands) => {
   ];
 };
 
+const partTwoAnswer = (data) => {
+  const sortedHands = promoteAndSortHands(data);
+  return sumWinning(sortedHands);
+};
+
 module.exports = {
   removeWildCard,
   findWildCard,
   promoteAndSortHands,
   newLabels,
+  partTwoAnswer,
 };

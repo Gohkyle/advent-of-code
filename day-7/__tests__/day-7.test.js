@@ -19,6 +19,7 @@ const {
   promoteHands,
   promoteAndSortHands,
   newLabels,
+  partTwoAnswer,
 } = require("../part2");
 
 describe("txtToJSON", () => {
@@ -987,5 +988,13 @@ describe("part2", () => {
       ];
       expect(promoteAndSortHands(hands)).toEqual(promotedHands);
     });
+  });
+  test("test data assertion", () => {
+    return txtToJSON(`${process.cwd()}/day-7/data/test-input`, txtToArr).then(
+      () => {
+        const testData = require("../data/test-input.json");
+        expect(partTwoAnswer(testData)).toEqual(5905);
+      }
+    );
   });
 });
