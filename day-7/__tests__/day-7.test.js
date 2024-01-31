@@ -13,6 +13,13 @@ const {
   sumWinning,
   partOneAnswer,
 } = require("../part1");
+const {
+  removeWildCard,
+  findWildCard,
+  promoteHands,
+  promoteAndSortHands,
+  newLabels,
+} = require("../part2");
 
 describe("txtToJSON", () => {
   describe("txtToArr()", () => {
@@ -666,6 +673,19 @@ describe("part1", () => {
         ];
         expect(sortHands(hands)).toEqual(sortedHands);
       });
+      test("sortHands() now takes an optional parameter of label values array", () => {
+        const hands = [
+          { hand: "92292", bid: 0 },
+          { hand: "J9KKK", bid: 0 },
+          { hand: "T9T9T", bid: 0 },
+        ];
+        const sortedHands = [
+          { hand: "J9KKK", bid: 0 },
+          { hand: "92292", bid: 0 },
+          { hand: "T9T9T", bid: 0 },
+        ];
+        expect(sortHands(hands, newLabels)).toEqual(sortedHands);
+      });
     });
   });
   describe("sumWinnings()", () => {
@@ -685,14 +705,287 @@ describe("part1", () => {
       });
     });
   });
-});
-describe("test data assertion", () => {
-  test("part1", () => {
+  test("test data assertion", () => {
     return txtToJSON(`${process.cwd()}/day-7/data/test-input`, txtToArr).then(
       () => {
         const testData = require("../data/test-input.json");
         expect(partOneAnswer(testData)).toEqual(6440);
       }
     );
+  });
+});
+describe("part2", () => {
+  describe("removeWildCard()", () => {
+    test("takes an array and filters out any hands containing a J", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      const noJokers = [{ hand: "23578", bid: 0 }];
+      expect(removeWildCard(hands)).toEqual(noJokers);
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      expect(removeWildCard(hands)).not.toEqual(hands);
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+      const copyHands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      removeWildCard(hands);
+      expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("findWildCard()", () => {
+    test("takes an array and filters out any hands not containing a J", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      const jokers = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+      ];
+      expect(findWildCard(hands)).toEqual(jokers);
+    });
+    test("has an optional parameter, when not defined, returns all hands with Js", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      const jokers = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+      ];
+      expect(findWildCard(hands)).toEqual(jokers);
+    });
+    test("when the optional parameter, is set to 1, returns hands including only one J", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      const jokers = [{ hand: "2345J", bid: 0 }];
+      expect(findWildCard(hands, 1)).toEqual(jokers);
+    });
+    test("when the optional parameter, is set to -1, returns hands including more than one J", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      const jokers = [{ hand: "235JJ", bid: 0 }];
+      expect(findWildCard(hands, -1)).toEqual(jokers);
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      expect(findWildCard(hands)).not.toEqual(hands);
+    });
+    test("returns a new array", () => {
+      const hands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+      const copyHands = [
+        { hand: "2345J", bid: 0 },
+        { hand: "235JJ", bid: 0 },
+        { hand: "23578", bid: 0 },
+      ];
+
+      findWildCard(hands);
+      expect(hands).toEqual(copyHands);
+    });
+  });
+  describe("promoteAndSortHands()", () => {
+    test("four of a kinds are promoted to five of a kind", () => {
+      const hands = [
+        { hand: "KJJJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+        { hand: "QJQQQ", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "QJQQQ", bid: 0 },
+        { hand: "KJJJJ", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
+    test("full houses are promoted to five of a kind", () => {
+      const hands = [
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "99933", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKJJK", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "99933", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "KKJJK", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
+    test("three of a kind are promoted to four of a kind", () => {
+      const hands = [
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "55523", bid: 0 },
+        { hand: "5552J", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "55523", bid: 0 },
+        { hand: "5552J", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
+    test("twoPair with 2 Js are promoted to four of a kind", () => {
+      const hands = [
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "66KAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "66KAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
+    test("twoPair with 1 Js are promoted to full houses", () => {
+      const hands = [
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "66KAA", bid: 0 },
+        { hand: "66JAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "66KAA", bid: 0 },
+        { hand: "66JAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
+    test("onePair are promoted to three of a kind", () => {
+      const hands = [
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "66KAA", bid: 0 },
+        { hand: "66KA7", bid: 0 },
+        { hand: "6JKAA", bid: 0 },
+        { hand: "67KJJ", bid: 0 },
+        { hand: "66JAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "66KA7", bid: 0 },
+        { hand: "66KAA", bid: 0 },
+        { hand: "6JKAA", bid: 0 },
+        { hand: "67KJJ", bid: 0 },
+        { hand: "66JAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
+    test("high cards are promoted to onepair", () => {
+      const hands = [
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "66KAA", bid: 0 },
+        { hand: "66KA7", bid: 0 },
+        { hand: "6JKAA", bid: 0 },
+        { hand: "67KJJ", bid: 0 },
+        { hand: "66JAA", bid: 0 },
+        { hand: "96234", bid: 0 },
+        { hand: "J7234", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      const promotedHands = [
+        { hand: "96234", bid: 0 },
+        { hand: "J7234", bid: 0 },
+        { hand: "66KA7", bid: 0 },
+        { hand: "66KAA", bid: 0 },
+        { hand: "6JKAA", bid: 0 },
+        { hand: "67KJJ", bid: 0 },
+        { hand: "66JAA", bid: 0 },
+        { hand: "5KKJJ", bid: 0 },
+        { hand: "TTTT4", bid: 0 },
+        { hand: "TKTTT", bid: 0 },
+        { hand: "K4JJJ", bid: 0 },
+        { hand: "KKJJJ", bid: 0 },
+        { hand: "KKKKK", bid: 0 },
+      ];
+      expect(promoteAndSortHands(hands)).toEqual(promotedHands);
+    });
   });
 });
