@@ -1,3 +1,4 @@
+const { txtToJSON } = require("../../utils/utils");
 const { txtToArr } = require("../data/txtToJSON");
 const {
   findFiveOfAKind,
@@ -9,6 +10,8 @@ const {
   findOnePair,
   findHighCard,
   sortHands,
+  sumWinning,
+  partOneAnswer,
 } = require("../part1");
 
 describe("txtToJSON", () => {
@@ -240,10 +243,10 @@ describe("part1", () => {
       expect(hands).toEqual(copyHands);
     });
   });
-  describe("createFullHouseRegex()", () => {
+  describe("createFHRegex()", () => {
     test("takes a card label, returns the regex capture group that returns any full house associated with three of tha given label", () => {
-      const KKKXX = `(?=.*((.*A){2}|(.*Q){2}|(.*J){2}|(.*T){2}|(.*9){2}|(.*8){2}|(.*7){2}|(.*6){2}|(.*5){2}|(.*4){2}|(.*3){2}|(.*2){2}))(.*K){3}`;
-      const TTTXX = `(?=.*((.*A){2}|(.*K){2}|(.*Q){2}|(.*J){2}|(.*9){2}|(.*8){2}|(.*7){2}|(.*6){2}|(.*5){2}|(.*4){2}|(.*3){2}|(.*2){2}))(.*T){3}`;
+      const KKKXX = `(?=.*((.*2){2}|(.*3){2}|(.*4){2}|(.*5){2}|(.*6){2}|(.*7){2}|(.*8){2}|(.*9){2}|(.*T){2}|(.*J){2}|(.*Q){2}|(.*A){2}))(.*K){3}`;
+      const TTTXX = `(?=.*((.*2){2}|(.*3){2}|(.*4){2}|(.*5){2}|(.*6){2}|(.*7){2}|(.*8){2}|(.*9){2}|(.*J){2}|(.*Q){2}|(.*K){2}|(.*A){2}))(.*T){3}`;
 
       expect(createFHRegex("K")).toBe(KKKXX);
       expect(createFHRegex("T")).toBe(TTTXX);
@@ -607,19 +610,89 @@ describe("part1", () => {
     });
   });
   describe("sortHands()", () => {
-    test("hands are sorted through their labels from 2 to A", () => {
-      const hands = [
-        { hand: "KKKKK", bid: 0 },
-        { hand: "22222", bid: 0 },
-        { hand: "TTTTT", bid: 0 },
-      ];
+    describe("hands are sorted through their labels from 2 to A", () => {
+      test("sorts five of a kind", () => {
+        const hands = [
+          { hand: "KKKKK", bid: 0 },
+          { hand: "22222", bid: 0 },
+          { hand: "TTTTT", bid: 0 },
+        ];
 
-      const sortedHands = [
-        { hand: "22222", bid: 0 },
-        { hand: "TTTTT", bid: 0 },
-        { hand: "KKKKK", bid: 0 },
-      ];
-      expect(sortHands(hands)).toEqual(sortedHands);
+        const sortedHands = [
+          { hand: "22222", bid: 0 },
+          { hand: "TTTTT", bid: 0 },
+          { hand: "KKKKK", bid: 0 },
+        ];
+        expect(sortHands(hands)).toEqual(sortedHands);
+      });
+      test("sorts four of a kind", () => {
+        const hands = [
+          { hand: "9KKKK", bid: 0 },
+          { hand: "62222", bid: 0 },
+          { hand: "4TTTT", bid: 0 },
+        ];
+
+        const sortedHands = [
+          { hand: "4TTTT", bid: 0 },
+          { hand: "62222", bid: 0 },
+          { hand: "9KKKK", bid: 0 },
+        ];
+        expect(sortHands(hands)).toEqual(sortedHands);
+      });
+      test("resorts to second card for sorting, when the first cards are the same", () => {
+        const hands = [
+          { hand: "9KKKK", bid: 0 },
+          { hand: "92222", bid: 0 },
+          { hand: "9TTTT", bid: 0 },
+        ];
+
+        const sortedHands = [
+          { hand: "92222", bid: 0 },
+          { hand: "9TTTT", bid: 0 },
+          { hand: "9KKKK", bid: 0 },
+        ];
+        expect(sortHands(hands)).toEqual(sortedHands);
+      });
+      test("sorts fullHouses", () => {
+        const hands = [
+          { hand: "99KKK", bid: 0 },
+          { hand: "92292", bid: 0 },
+          { hand: "T9T9T", bid: 0 },
+        ];
+        const sortedHands = [
+          { hand: "92292", bid: 0 },
+          { hand: "99KKK", bid: 0 },
+          { hand: "T9T9T", bid: 0 },
+        ];
+        expect(sortHands(hands)).toEqual(sortedHands);
+      });
     });
+  });
+  describe("sumWinnings()", () => {
+    describe("returns the sum of bid times the rank", () => {
+      test("for one hand games, the winning and bid are equal", () => {
+        const hands = [{ hand: "23456", bid: 123 }];
+
+        expect(sumWinning(hands)).toBe(123);
+      });
+      test("for multi hand games, the winning is equal to the product of the bid and the rank", () => {
+        const hands = [
+          { hand: "23456", bid: 123 },
+          { hand: "33456", bid: 96 },
+        ];
+
+        expect(sumWinning(hands)).toBe(315);
+      });
+    });
+  });
+});
+describe("test data assertion", () => {
+  test("part1", () => {
+    return txtToJSON(`${process.cwd()}/day-7/data/test-input`, txtToArr).then(
+      () => {
+        const testData = require("../data/test-input.json");
+        expect(partOneAnswer(testData)).toEqual(6440);
+      }
+    );
   });
 });

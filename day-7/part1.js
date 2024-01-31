@@ -130,9 +130,48 @@ const findHighCard = (hands) => {
 };
 
 const sortHands = (hands) => {
-  const compareFn = ({ hand }) => {};
-  hands.sort();
+  const compareFn = (a, b) => {
+    for (let i = 0; i < 5; i++) {
+      const sortingValue =
+        labels.indexOf(a.hand[i]) - labels.indexOf(b.hand[i]);
+
+      if (sortingValue !== 0) {
+        return sortingValue;
+      }
+    }
+  };
+  return hands.sort(compareFn);
 };
+
+const sumWinning = (hands) => {
+  return hands.reduce((winnings, { bid }, index) => {
+    winnings += bid * (index + 1);
+    return winnings;
+  }, 0);
+};
+
+const partOneAnswer = (hands) => {
+  const fives = sortHands(findFiveOfAKind(hands));
+  const fours = sortHands(findFourOfAKind(hands));
+  const houses = sortHands(findFullHouse(hands));
+  const threes = sortHands(findThreeOfAKind(hands));
+  const twoPairs = sortHands(findTwoPair(hands));
+  const pairs = sortHands(findOnePair(hands));
+  const highCards = sortHands(findHighCard(hands));
+
+  const sortedHands = [
+    ...highCards,
+    ...pairs,
+    ...twoPairs,
+    ...threes,
+    ...houses,
+    ...fours,
+    ...fives,
+  ];
+
+  return sumWinning(sortedHands);
+};
+
 module.exports = {
   findFiveOfAKind,
   findFourOfAKind,
@@ -143,4 +182,6 @@ module.exports = {
   findOnePair,
   findHighCard,
   sortHands,
+  sumWinning,
+  partOneAnswer,
 };
