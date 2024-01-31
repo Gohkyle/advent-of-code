@@ -129,11 +129,11 @@ const findHighCard = (hands) => {
   });
 };
 
-const sortHands = (hands) => {
+const sortHands = (hands, rankings = labels) => {
   const compareFn = (a, b) => {
     for (let i = 0; i < 5; i++) {
       const sortingValue =
-        labels.indexOf(a.hand[i]) - labels.indexOf(b.hand[i]);
+        rankings.indexOf(a.hand[i]) - rankings.indexOf(b.hand[i]);
 
       if (sortingValue !== 0) {
         return sortingValue;
