@@ -1,5 +1,4 @@
 const { getTxtToJSON, getTxtToJSON2 } = require("./data/txtToJSON");
-const fs = require("fs");
 const { part1Answer } = require("./part1");
 const { part2Answer } = require("./part2");
 
