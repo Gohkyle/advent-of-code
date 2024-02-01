@@ -23,7 +23,7 @@ const getNodes = (txt) => {
 };
 
 const getDirectories = (txt) => {
-  const directoryRegex = new RegExp(`(?<=\\()\\w{3}, [A-Z]{3}`, "g");
+  const directoryRegex = new RegExp(`(?<=\\()\\w{3}, \\w{3}`, "g");
   const directoriesStr = txt.match(directoryRegex);
 
   return directoriesStr.map((directoryStr) => {
