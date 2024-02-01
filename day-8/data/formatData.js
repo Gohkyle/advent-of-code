@@ -18,12 +18,12 @@ const getPath = (txt) => {
 };
 
 const getNodes = (txt) => {
-  const nodeRegex = new RegExp(`[A-Z]{3}(?= \\=)`, "g");
+  const nodeRegex = new RegExp(`\\w{3}(?= \\=)`, "g");
   return txt.match(nodeRegex);
 };
 
 const getDirectories = (txt) => {
-  const directoryRegex = new RegExp(`(?<=\\()[A-Z]{3}, [A-Z]{3}`, "g");
+  const directoryRegex = new RegExp(`(?<=\\()\\w{3}, [A-Z]{3}`, "g");
   const directoriesStr = txt.match(directoryRegex);
 
   return directoriesStr.map((directoryStr) => {
