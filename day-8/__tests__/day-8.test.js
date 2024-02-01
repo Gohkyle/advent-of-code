@@ -123,7 +123,7 @@ describe("part two", () => {
       return txtToJSON(`${__dirname}/../data/test-input3`, formatData).then(
         () => {
           const data = require("../data/test-input3.json");
-          console.log(data);
+
           const startNodes = ["11A", "22A"];
           expect(findStartNodes(data)).toEqual(startNodes);
         }
