@@ -94,7 +94,6 @@ const getRoute = (pipes) => {
     }
     if (pipes[s[0]][s[1]] !== "S") {
       getNextStep();
-      console.log(route);
     }
   }
 
