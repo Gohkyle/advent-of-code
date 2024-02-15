@@ -7,9 +7,11 @@ const {
 } = require("../part1");
 const { txtToJSON } = require("../../utils/utils");
 const { partTwoAnswer } = require("../part2");
+
 beforeAll(() => {
   return txtToJSON(`${__dirname}/../data/test-input`, getSequences);
 });
+
 describe("formatData", () => {
   describe("getSequences()", () => {
     test("takes a string returns an array of the lines, with the numbers stored in an array", () => {
