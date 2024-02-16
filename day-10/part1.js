@@ -92,12 +92,13 @@ const getRoute = (pipes) => {
     } else if (currentPipe === "F") {
       getDisplacement(route)[1] < 0 ? goSouth() : goEast();
     }
-    if (pipes[s[0]][s[1]] !== "S") {
-      getNextStep();
-    }
   }
 
   getNextStep();
+
+  while (pipes[s[0]][s[1]] !== "S") {
+    getNextStep();
+  }
   return route;
 };
 
