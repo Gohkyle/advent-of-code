@@ -6,7 +6,7 @@ async function answer() {
   await txtToJSON(`${__dirname}/data/puzzle-input`, getPipes);
 
   const data = require("./data/puzzle-input.json");
-  console.log(getRoute(data));
+  console.log(partOneAnswer(data));
 }
 
 answer();
