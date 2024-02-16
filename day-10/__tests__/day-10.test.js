@@ -192,150 +192,151 @@ describe("part1", () => {
         const step1 = [3, 1];
         expect(getRoute(pipes)[1]).toEqual(step1);
       });
-      describe("at not S", () => {
-        describe("|:", () => {
-          test("south bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "S", ".", "7", "."],
-              [".", "|", ".", "|", "."],
-              [".", "S", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [3, 1];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
-          test("north bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "S", ".", "S", "."],
-              [".", "|", ".", "|", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step6 = [1, 3];
-            expect(getRoute(pipes)[6]).toEqual(step6);
-          });
+    });
+    describe("at not S", () => {
+      describe("|:", () => {
+        test("south bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "S", ".", "7", "."],
+            [".", "|", ".", "|", "."],
+            [".", "S", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [3, 1];
+          console.log(getRoute(pipes));
+          expect(getRoute(pipes)[2]).toEqual(step2);
         });
-        describe("-:", () => {
-          test("east bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "S", "-", "S", "."],
-              [".", "|", ".", "|", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [1, 3];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
-          test("west bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", ".", "-", "S", "."],
-              [".", "S", ".", "|", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step4 = [3, 1];
-            expect(getRoute(pipes)[4]).toEqual(step4);
-          });
+        test("north bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "S", ".", "S", "."],
+            [".", "|", ".", "|", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step6 = [1, 3];
+          expect(getRoute(pipes)[6]).toEqual(step6);
         });
-        describe("L:", () => {
-          test("east bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", ".", "-", "7", "."],
-              [".", "S", ".", "|", "."],
-              [".", "L", "S", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [3, 2];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
-          test("north bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "-", "7", "."],
-              [".", "|", ".", "|", "."],
-              [".", "L", "S", "|", "."],
-              [".", ".", ".", "S", "."],
-            ];
-            const step2 = [2, 1];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
+      });
+      describe("-:", () => {
+        test("east bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "S", "-", "S", "."],
+            [".", "|", ".", "|", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [1, 3];
+          expect(getRoute(pipes)[2]).toEqual(step2);
         });
-        describe("J:", () => {
-          test("west bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "-", ".", "."],
-              [".", "|", ".", "S", "."],
-              [".", "L", "S", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [3, 2];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
-          test("north bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "-", "7", "."],
-              [".", "|", ".", "|", "."],
-              [".", "L", "S", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [2, 3];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
+        test("west bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", ".", "-", "S", "."],
+            [".", "S", ".", "|", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step4 = [3, 1];
+          expect(getRoute(pipes)[4]).toEqual(step4);
         });
-        describe("7:", () => {
-          test("west bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "-", "7", "."],
-              [".", "|", ".", "S", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [1, 2];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
-          test("south bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "S", "7", "."],
-              [".", "|", ".", "S", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [2, 3];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
+      });
+      describe("L:", () => {
+        test("east bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", ".", "-", "7", "."],
+            [".", "S", ".", "|", "."],
+            [".", "L", "S", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [3, 2];
+          expect(getRoute(pipes)[2]).toEqual(step2);
         });
-        describe("F:", () => {
-          test("east bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "-", "7", "."],
-              [".", "S", ".", "|", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [1, 2];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
-          test("south bound:", () => {
-            const pipes = [
-              [".", ".", ".", ".", "."],
-              [".", "F", "S", ".", "."],
-              [".", "S", ".", "-", "."],
-              [".", "L", "-", "J", "."],
-              [".", ".", ".", ".", "."],
-            ];
-            const step2 = [2, 1];
-            expect(getRoute(pipes)[2]).toEqual(step2);
-          });
+        test("north bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "-", "7", "."],
+            [".", "|", ".", "|", "."],
+            [".", "L", "S", "|", "."],
+            [".", ".", ".", "S", "."],
+          ];
+          const step2 = [2, 1];
+          expect(getRoute(pipes)[2]).toEqual(step2);
+        });
+      });
+      describe("J:", () => {
+        test("west bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "-", ".", "."],
+            [".", "|", ".", "S", "."],
+            [".", "L", "S", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [3, 2];
+          expect(getRoute(pipes)[2]).toEqual(step2);
+        });
+        test("north bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "-", "7", "."],
+            [".", "|", ".", "|", "."],
+            [".", "L", "S", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [2, 3];
+          expect(getRoute(pipes)[2]).toEqual(step2);
+        });
+      });
+      describe("7:", () => {
+        test("west bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "-", "7", "."],
+            [".", "|", ".", "S", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [1, 2];
+          expect(getRoute(pipes)[2]).toEqual(step2);
+        });
+        test("south bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "S", "7", "."],
+            [".", "|", ".", "S", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [2, 3];
+          expect(getRoute(pipes)[2]).toEqual(step2);
+        });
+      });
+      describe("F:", () => {
+        test("east bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "-", "7", "."],
+            [".", "S", ".", "|", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [1, 2];
+          expect(getRoute(pipes)[2]).toEqual(step2);
+        });
+        test("south bound:", () => {
+          const pipes = [
+            [".", ".", ".", ".", "."],
+            [".", "F", "S", ".", "."],
+            [".", "S", ".", "-", "."],
+            [".", "L", "-", "J", "."],
+            [".", ".", ".", ".", "."],
+          ];
+          const step2 = [2, 1];
+          expect(getRoute(pipes)[2]).toEqual(step2);
         });
       });
     });
