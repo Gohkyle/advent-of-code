@@ -1,3 +1,5 @@
+const { getRoute } = require("./part1");
+
 const getArea = (route) => {
   return Math.abs(
     0.5 *
