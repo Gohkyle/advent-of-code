@@ -7,18 +7,21 @@ const {
   getDisplacement,
   partOneAnswer,
 } = require("../part1");
-const { getArea } = require("../part2");
+const { getArea, getBoundaries } = require("../part2");
+
+async function getData() {
+  await txtToJSON(`${__dirname}/../data/test-input1`, getPipes);
+  await txtToJSON(`${__dirname}/../data/test-input1a`, getPipes);
+  await txtToJSON(`${__dirname}/../data/test-input2`, getPipes);
+  await txtToJSON(`${__dirname}/../data/test-input2a`, getPipes);
+  await txtToJSON(`${__dirname}/../data/test-input3`, getPipes);
+  await txtToJSON(`${__dirname}/../data/test-input4`, getPipes);
+}
 
 beforeAll(() => {
-  async function getData() {
-    await txtToJSON(`${__dirname}/../data/test-input1`, getPipes);
-    await txtToJSON(`${__dirname}/../data/test-input1a`, getPipes);
-    await txtToJSON(`${__dirname}/../data/test-input2`, getPipes);
-    await txtToJSON(`${__dirname}/../data/test-input2a`, getPipes);
-  }
-
   return getData();
 });
+
 describe("formatData", () => {
   describe("getPipes()", () => {
     test("takes a txt string, returns an array of arrays to represent it as a grid", () => {
@@ -36,12 +39,10 @@ describe("formatData", () => {
 });
 
 describe("part1", () => {
-  const testPipesA = require("../data/test-input1a.json");
-  const testPipes1A = require("../data/test-input2a.json");
-  const testPipes = require("../data/test-input1.json");
-  const testPipes1 = require("../data/test-input2.json");
   describe("getS()", () => {
     test("takes a pipe array, and returns the coordinated for the start position", () => {
+      const testPipes = require("../data/test-input1.json");
+      const testPipes1 = require("../data/test-input2.json");
       const coordinates = [1, 1];
       const coordinates1 = [2, 0];
 
@@ -51,6 +52,7 @@ describe("part1", () => {
   });
   describe("getRoute()", () => {
     test("takes a pipes array and and coordinates and returns an array of the path of the pipes loop", () => {
+      const testPipes = require("../data/test-input1.json");
       const route = [
         [1, 1],
         [1, 2],
@@ -67,27 +69,35 @@ describe("part1", () => {
   });
   describe("checkPosition()", () => {
     test("check the North Position, returns with the pipe, if there is a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [3, 1], "N")).toEqual(true);
     });
     test("check the North Position, returns null, if there is not a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [3, 2], "N")).toBe(false);
     });
     test("check the East Position, returns with the pipe, if there is a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [3, 1], "E")).toEqual(true);
     });
     test("check the East Position, returns null, if there is not a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [2, 3], "E")).toBe(false);
     });
     test("check the South Position, returns with the feasible pipe, if there is a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [1, 3], "S")).toEqual(true);
     });
     test("check the South Position, returns null, if there is not a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [1, 2], "S")).toBe(false);
     });
     test("check the West Position, returns with the feasiable pipe, if there is a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [3, 3], "W")).toBe(true);
     });
     test("check the West Position, returns null, if there is not a receiving pipe", () => {
+      const testPipes = require("../data/test-input1.json");
       expect(checkDirection(testPipes, [2, 1], "W")).toBe(false);
     });
   });
@@ -205,7 +215,6 @@ describe("part1", () => {
             [".", ".", ".", ".", "."],
           ];
           const step2 = [3, 1];
-          console.log(getRoute(pipes));
           expect(getRoute(pipes)[2]).toEqual(step2);
         });
         test("north bound:", () => {
@@ -343,6 +352,10 @@ describe("part1", () => {
     });
   });
   test("testData assertion", () => {
+    const testPipes = require("../data/test-input1.json");
+    const testPipesA = require("../data/test-input1a.json");
+    const testPipes1A = require("../data/test-input2a.json");
+    const testPipes1 = require("../data/test-input2.json");
     expect(partOneAnswer(testPipesA)).toBe(4);
     expect(partOneAnswer(testPipes1A)).toBe(8);
     expect(partOneAnswer(testPipes)).toBe(4);
@@ -369,9 +382,20 @@ describe("part2", () => {
         [".", ".", "."],
       ];
 
-      expect(getArea(array)).toBe(6);
+      expect(getArea(array)).toBe(4);
       expect(getArea(array1)).toBe(6);
       expect(getArea(array2)).toBe(9);
+    });
+  });
+  describe("getBoundaries", () => {
+    test("returns the area/ the number of values of an array, that represents a coorindates", () => {
+      const testPipes1 = require(`../data/test-input2.json`);
+      const testPipes = require(`../data/test-input1.json`);
+      const testPipes3 = require(`../data/test-input3.json`);
+
+      expect(getBoundaries(testPipes)).toBe(16 + 8);
+      expect(getBoundaries(testPipes1)).toBe(16 + 16);
+      expect(getBoundaries(testPipes3)).toBe(36 + 46);
     });
   });
 });
