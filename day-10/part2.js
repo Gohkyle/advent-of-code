@@ -1,16 +1,21 @@
 const { getRoute } = require("./part1");
 
 const pickTheorem = () => {
-  // h = A - i - b/2 + 1
+  // i = A - b/2 + 1
 };
 const getArea = (arr) => {
-  return arr.length * arr[0].length;
+  return Math.abs(
+    0.5 *
+      arr.reduce((area, [x1, y1], index) => {
+        const [x2, y2] = index === arr.length - 1 ? arr[0] : arr[index + 1];
+        area += x1 * y2 - x2 * y1;
+        return area;
+      }, 0)
+  );
 };
 
-const getBoundaries = (pipes) => {
-  const containerBoundary = 2 * (pipes.length + pipes[0].length) - 4;
-  const holeBoundary = getRoute(pipes).length - 1;
-  return containerBoundary + holeBoundary;
+const getInteriorPts = (route) => {
+  return route.length - 1;
 };
 
-module.exports = { getArea, getBoundaries };
+module.exports = { getArea, getInteriorPts };

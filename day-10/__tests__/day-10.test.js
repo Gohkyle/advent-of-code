@@ -7,7 +7,7 @@ const {
   getDisplacement,
   partOneAnswer,
 } = require("../part1");
-const { getArea, getBoundaries } = require("../part2");
+const { getArea, getBoundaries, getInteriorPts } = require("../part2");
 
 async function getData() {
   await txtToJSON(`${__dirname}/../data/test-input1`, getPipes);
@@ -365,37 +365,60 @@ describe("part1", () => {
 
 describe("part2", () => {
   describe("getArea", () => {
-    test("returns the area/ the number of values of an array, that represents a coorindates", () => {
+    test("returns the area enclosed by coordinates using shoe lace theorem", () => {
       const array = [
-        [".", "."],
-        [".", "."],
+        [1, 1],
+        [1, 2],
+        [2, 2],
+        [2, 1],
       ];
       const array1 = [
-        [".", "."],
-        [".", "."],
-        [".", "."],
+        [1, 6],
+        [3, 1],
+        [7, 2],
+        [4, 4],
+        [8, 5],
       ];
 
       const array2 = [
-        [".", ".", "."],
-        [".", ".", "."],
-        [".", ".", "."],
+        [3, 1],
+        [7, 2],
+        [4, 4],
+        [8, 6],
+        [1, 7],
       ];
-
-      expect(getArea(array)).toBe(4);
-      expect(getArea(array1)).toBe(6);
-      expect(getArea(array2)).toBe(9);
+      const array3 = [
+        [3, 1],
+        [4, 3],
+        [7, 2],
+        [4, 4],
+        [8, 6],
+        [1, 7],
+      ];
+      const array4 = [
+        [1, 1],
+        [1, 2],
+        [1, 3],
+        [2, 3],
+        [2, 2],
+        [2, 1],
+      ];
+      expect(getArea(array)).toBe(1);
+      expect(getArea(array1)).toBe(16.5);
+      expect(getArea(array2)).toBe(20.5);
+      expect(getArea(array3)).toBe(17);
+      expect(getArea(array4)).toBe(2);
     });
   });
-  describe("getBoundaries", () => {
-    test("returns the area/ the number of values of an array, that represents a coorindates", () => {
+  describe("getInteriorPts", () => {
+    test("returns the number of pipe pieces", () => {
       const testPipes1 = require(`../data/test-input2.json`);
       const testPipes = require(`../data/test-input1.json`);
       const testPipes3 = require(`../data/test-input3.json`);
 
-      expect(getBoundaries(testPipes)).toBe(16 + 8);
-      expect(getBoundaries(testPipes1)).toBe(16 + 16);
-      expect(getBoundaries(testPipes3)).toBe(36 + 46);
+      expect(getInteriorPts(getRoute(testPipes))).toBe(8);
+      expect(getInteriorPts(getRoute(testPipes1))).toBe(16);
+      expect(getInteriorPts(getRoute(testPipes3))).toBe(46);
     });
   });
 });
