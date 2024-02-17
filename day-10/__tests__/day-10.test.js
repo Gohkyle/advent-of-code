@@ -350,6 +350,64 @@ describe("part1", () => {
         });
       });
     });
+    describe("does not break when S is at the edge", () => {
+      test("northface edge", () => {
+        const testPipeN = [
+          ["S", "7"],
+          ["L", "J"],
+        ];
+        const route = [
+          [0, 0],
+          [0, 1],
+          [1, 1],
+          [1, 0],
+          [0, 0],
+        ];
+        expect(getRoute(testPipeN)).toEqual(route);
+      });
+      test("eastface edge", () => {
+        const testPipeE = [
+          ["F", "S"],
+          ["L", "J"],
+        ];
+        const route = [
+          [0, 1],
+          [1, 1],
+          [1, 0],
+          [0, 0],
+          [0, 1],
+        ];
+        expect(getRoute(testPipeE)).toEqual(route);
+      });
+      test("southface edge", () => {
+        const testPipeS = [
+          ["F", "7"],
+          ["L", "S"],
+        ];
+        const route = [
+          [1, 1],
+          [0, 1],
+          [0, 0],
+          [1, 0],
+          [1, 1],
+        ];
+        expect(getRoute(testPipeS)).toEqual(route);
+      });
+      test("southface edge", () => {
+        const testPipeW = [
+          ["F", "7"],
+          ["S", "J"],
+        ];
+        const route = [
+          [1, 0],
+          [0, 0],
+          [0, 1],
+          [1, 1],
+          [1, 0],
+        ];
+        expect(getRoute(testPipeW)).toEqual(route);
+      });
+    });
   });
   test("testData assertion", () => {
     const testPipes = require("../data/test-input1.json");
@@ -402,6 +460,7 @@ describe("part2", () => {
         [2, 3],
         [2, 2],
         [2, 1],
+        [1, 1],
       ];
       expect(getArea(array)).toBe(1);
       expect(getArea(array1)).toBe(16.5);
@@ -410,15 +469,26 @@ describe("part2", () => {
       expect(getArea(array4)).toBe(2);
     });
   });
-  describe("getInteriorPts", () => {
+  describe("getBoundaries", () => {
     test("returns the number of pipe pieces", () => {
       const testPipes1 = require(`../data/test-input2.json`);
       const testPipes = require(`../data/test-input1.json`);
       const testPipes3 = require(`../data/test-input3.json`);
 
-      expect(getInteriorPts(getRoute(testPipes))).toBe(8);
-      expect(getInteriorPts(getRoute(testPipes1))).toBe(16);
-      expect(getInteriorPts(getRoute(testPipes3))).toBe(46);
+      expect(getBoundaries(getRoute(testPipes))).toBe(8);
+      expect(getBoundaries(getRoute(testPipes1))).toBe(16);
+      expect(getBoundaries(getRoute(testPipes3))).toBe(46);
+    });
+  });
+  describe("getInteriorPts()", () => {
+    test("using Pick's Theorem gets interiorPts", () => {
+      const testPipes = require("../data/test-input1.json");
+      const testPipes1 = require("../data/test-input3.json");
+      const testPipes2 = require("../data/test-input4.json");
+
+      expect(getInteriorPts(getRoute(testPipes))).toBe(1);
+      expect(getInteriorPts(getRoute(testPipes1))).toBe(4);
+      expect(getInteriorPts(getRoute(testPipes2))).toBe(10);
     });
   });
 });
