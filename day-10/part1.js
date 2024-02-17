@@ -17,13 +17,13 @@ const checkDirection = (pipes, position, direction) => {
 
   switch (direction) {
     case "N":
-      return northRegex.test(pipes[y - 1][x]);
+      return pipes[y - 1] ? northRegex.test(pipes[y - 1][x]) : false;
     case "E":
-      return eastRegex.test(pipes[y][x + 1]);
+      return pipes[y][x + 1] ? eastRegex.test(pipes[y][x + 1]) : false;
     case "S":
-      return southRegex.test(pipes[y + 1][x]);
+      return pipes[y + 1] ? southRegex.test(pipes[y + 1][x]) : false;
     case "W":
-      return westRegex.test(pipes[y][x - 1]);
+      return pipes[y][x - 1] ? westRegex.test(pipes[y][x - 1]) : false;
   }
 };
 
