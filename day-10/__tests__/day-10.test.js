@@ -7,6 +7,7 @@ const {
   getDisplacement,
   partOneAnswer,
 } = require("../part1");
+const { getArea } = require("../part2");
 
 beforeAll(() => {
   async function getData() {
@@ -346,5 +347,31 @@ describe("part1", () => {
     expect(partOneAnswer(testPipes1A)).toBe(8);
     expect(partOneAnswer(testPipes)).toBe(4);
     expect(partOneAnswer(testPipes1)).toBe(8);
+  });
+});
+
+describe("part2", () => {
+  describe("getArea", () => {
+    test("returns the area/ the number of values of an array, that represents a coorindates", () => {
+      const array = [
+        [".", "."],
+        [".", "."],
+      ];
+      const array1 = [
+        [".", "."],
+        [".", "."],
+        [".", "."],
+      ];
+
+      const array2 = [
+        [".", ".", "."],
+        [".", ".", "."],
+        [".", ".", "."],
+      ];
+
+      expect(getArea(array)).toBe(6);
+      expect(getArea(array1)).toBe(6);
+      expect(getArea(array2)).toBe(9);
+    });
   });
 });
